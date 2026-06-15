@@ -1,0 +1,3 @@
+# Le fichier .env est committé volontairement (usage pédagogique, mot de passe déjà connu).
+# Pour un mot de passe personnel sans le committer, créez un .env.local (chargé manuellement)
+.env.local

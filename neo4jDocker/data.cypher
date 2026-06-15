@@ -115,7 +115,7 @@ CREATE (c:Competence {nom: "Turbines", description: "Machines tournantes", param
 MATCH (d:Domaine {nom: "Hydraulique"}), (c:Competence {nom: "Turbines"})
 CREATE (d)-[:HAS_COMPETENCE]->(c);
 
-CREATE (f:Filiere {nom: "Informatique"});
+// La filière "Informatique" existe déjà (créée plus haut) : on la réutilise au lieu de la recréer
 MATCH (o:Organisation {nom: "GE Vernova"}), (f:Filiere {nom: "Informatique"})
 CREATE (o)-[:HAS_FILIERE]->(f);
 CREATE (d:Domaine {nom: "Supervision"});

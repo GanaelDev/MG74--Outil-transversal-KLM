@@ -31,15 +31,27 @@ Ce projet propose une plateforme complète pour la gestion, la visualisation et 
 
 ### 1. Lancer Neo4j (Docker)
 
-Sous Windows :
-```powershell
-cd neo4jDocker
-./start-neo4j.ps1
-```
-Sous Linux/Mac :
+Le démarrage se fait avec Docker Compose (identique sur Windows, Linux et Mac) :
+
 ```bash
 cd neo4jDocker
-./start-neo4j.sh
+docker compose up -d
+```
+
+- Interface web : http://localhost:7474 — utilisateur `neo4j`, mot de passe `Klm2025!`
+- Les données sont **persistantes** (volumes Docker), elles survivent à un redémarrage.
+- Paramètres modifiables dans `neo4jDocker/.env` (utilisateur, mot de passe, version).
+
+Importer les données initiales (`data.cypher`) — à faire **une seule fois** :
+```bash
+docker compose --profile import up import
+```
+
+Autres commandes utiles :
+```bash
+docker compose down       # arrêter Neo4j (conserve les données)
+docker compose down -v    # tout supprimer, y compris les données (reset complet)
+docker compose logs -f neo4j   # suivre les logs
 ```
 
 ### 2. Importer un fichier JSON métier dans Neo4j

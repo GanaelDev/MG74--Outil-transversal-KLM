@@ -1,0 +1,53 @@
+services:
+  neo4j:
+    image: neo4j:${NEO4J_VERSION:-5.19}
+    container_name: neo4j-klm
+    restart: unless-stopped
+    ports:
+      - "7474:7474"   # Interface web (HTTP)
+      - "7687:7687"   # Protocole Bolt (drivers / cypher-shell)
+    environment:
+      NEO4J_AUTH: "${NEO4J_USER:-neo4j}/${NEO4J_PASSWORD:-Klm2025!}"
+      NEO4J_PLUGINS: '["apoc"]'
+      NEO4J_apoc_import_file_enabled: "true"
+      NEO4J_apoc_export_file_enabled: "true"
+      NEO4J_apoc_import_file_use__neo4j__config: "true"
+    volumes:
+      - neo4j_data:/data
+      - neo4j_logs:/logs
+      - neo4j_plugins:/plugins
+      - ./:/import:ro          # data.cypher et fichiers .graphml accessibles via /import
+    healthcheck:
+      test: ["CMD-SHELL", "cypher-shell -u ${NEO4J_USER:-neo4j} -p ${NEO4J_PASSWORD:-Klm2025!} 'RETURN 1' || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 15
+      start_period: 30s
+
+  # Service one-shot d'import (opt-in). Ne démarre PAS avec un `up` normal.
+  # Lancement : docker compose --profile import up import
+  import:
+    image: neo4j:${NEO4J_VERSION:-5.19}
+    container_name: neo4j-klm-import
+    profiles: ["import"]
+    restart: "no"
+    depends_on:
+      neo4j:
+        condition: service_healthy
+    volumes:
+      - ./:/import:ro
+    entrypoint:
+      - cypher-shell
+      - -a
+      - bolt://neo4j:7687
+      - -u
+      - "${NEO4J_USER:-neo4j}"
+      - -p
+      - "${NEO4J_PASSWORD:-Klm2025!}"
+      - --file
+      - /import/data.cypher
+
+volumes:
+  neo4j_data:
+  neo4j_logs:
+  neo4j_plugins:
