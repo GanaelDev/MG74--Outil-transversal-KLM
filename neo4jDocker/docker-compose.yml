@@ -34,6 +34,11 @@ services:
     depends_on:
       neo4j:
         condition: service_healthy
+    environment:
+      # cypher-shell est une appli Java : sans cela, le fichier --file est lu avec le
+      # charset par défaut du conteneur et les accents UTF-8 sont corrompus.
+      LANG: C.UTF-8
+      JAVA_TOOL_OPTIONS: "-Dfile.encoding=UTF-8"
     volumes:
       - ./:/import:ro
     entrypoint:
