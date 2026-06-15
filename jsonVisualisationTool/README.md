@@ -31,6 +31,19 @@ npm run dev
 
 - Ouvrez ensuite votre navigateur à l'adresse indiquée (généralement http://localhost:5173/).
 
+## Lancement via Docker (développement, hot-reload)
+
+Permet de lancer le visualisateur sans installer Node localement, avec rechargement à chaud.
+
+```bash
+cd jsonVisualisationTool
+docker compose up        # build l'image puis démarre Vite sur http://localhost:5173
+docker compose down      # arrêter le conteneur
+```
+
+- Le code source est monté dans le conteneur : toute modification est rechargée automatiquement.
+- Ouvrez http://localhost:5173 dans votre navigateur.
+
 ## Construction pour la production
 
 ```bash

@@ -1,0 +1,14 @@
+# Image de développement pour le visualisateur JSON (Vite + React + TS)
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Installe les dépendances en premier pour profiter du cache de couches Docker
+COPY package.json package-lock.json ./
+RUN npm ci
+
+# Le code source est monté via un bind mount (voir docker-compose.yml)
+EXPOSE 5173
+
+# Vite doit écouter sur 0.0.0.0 pour être joignable depuis l'hôte
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
