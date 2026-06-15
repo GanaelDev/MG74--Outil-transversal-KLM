@@ -1,6 +1,6 @@
 import { FiliereMetier, GraphNode, GraphEdge } from '../types';
 
-const nodeColors = {
+export const nodeColors = {
   vocabulary: {
     background: '#3B82F6',
     border: '#1E40AF',

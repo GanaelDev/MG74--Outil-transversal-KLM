@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, BookOpen, Settings, Lightbulb, Zap, Globe } from 'lucide-react';
+import { X, BookOpen, Settings, Lightbulb, Zap, Globe, Database } from 'lucide-react';
 import { GraphNode } from '../types';
 
 interface NodeDetailsProps {
@@ -20,6 +20,8 @@ export const NodeDetails: React.FC<NodeDetailsProps> = ({ node, onClose }) => {
         return <Zap className="w-5 h-5" />;
       case 'domaine':
         return <Globe className="w-5 h-5" />;
+      case 'neo4j':
+        return <Database className="w-5 h-5" />;
       default:
         return <Globe className="w-5 h-5" />;
     }
@@ -39,6 +41,8 @@ export const NodeDetails: React.FC<NodeDetailsProps> = ({ node, onClose }) => {
         return 'Domaine Métier';
       case 'filiere':
         return 'Filière Métier';
+      case 'neo4j':
+        return (node.data.labels && node.data.labels[0]) || 'Nœud Neo4j';
       default:
         return 'Élément';
     }
@@ -139,6 +143,39 @@ export const NodeDetails: React.FC<NodeDetailsProps> = ({ node, onClose }) => {
               <span className="px-2 py-1 bg-orange-100 text-orange-800 rounded text-xs font-medium">
                 Type: {data.type}
               </span>
+            </div>
+          </div>
+        );
+
+      case 'neo4j':
+        return (
+          <div className="space-y-4">
+            {data.labels && data.labels.length > 0 && (
+              <div>
+                <h4 className="font-medium text-gray-900 mb-2">Labels</h4>
+                <div className="flex flex-wrap gap-2">
+                  {data.labels.map((label: string) => (
+                    <span key={label} className="px-2 py-1 bg-gray-100 text-gray-800 rounded text-xs font-medium">
+                      {label}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+            <div>
+              <h4 className="font-medium text-gray-900 mb-2">Propriétés</h4>
+              {data.properties && Object.keys(data.properties).length > 0 ? (
+                <div className="space-y-1">
+                  {Object.entries(data.properties).map(([key, value]) => (
+                    <div key={key} className="flex gap-2 text-sm">
+                      <span className="font-medium text-gray-700 flex-shrink-0">{key}</span>
+                      <span className="text-gray-600 break-all">= {String(value)}</span>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm text-gray-500">Aucune propriété.</p>
+              )}
             </div>
           </div>
         );

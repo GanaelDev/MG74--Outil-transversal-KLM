@@ -1,12 +1,13 @@
 import React from 'react';
-import { Network, Upload } from 'lucide-react';
+import { Network, Upload, Database } from 'lucide-react';
 
 interface HeaderProps {
   onUploadClick: () => void;
+  onLoadNeo4j: () => void;
   hasData: boolean;
 }
 
-export const Header: React.FC<HeaderProps> = ({ onUploadClick, hasData }) => {
+export const Header: React.FC<HeaderProps> = ({ onUploadClick, onLoadNeo4j, hasData }) => {
   return (
     <header className="bg-white shadow-sm border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -21,13 +22,22 @@ export const Header: React.FC<HeaderProps> = ({ onUploadClick, hasData }) => {
             </div>
           </div>
           
-          <button
-            onClick={onUploadClick}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            <Upload className="w-4 h-4" />
-            {hasData ? 'Charger un autre fichier' : 'Charger un fichier JSON'}
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={onLoadNeo4j}
+              className="flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
+            >
+              <Database className="w-4 h-4" />
+              Neo4j
+            </button>
+            <button
+              onClick={onUploadClick}
+              className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              <Upload className="w-4 h-4" />
+              {hasData ? 'Charger un autre fichier' : 'Charger un fichier JSON'}
+            </button>
+          </div>
         </div>
       </div>
     </header>
