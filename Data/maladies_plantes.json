@@ -1,0 +1,314 @@
+{
+  "filliereMetier": {
+    "nom": "Maladies des plantes",
+    "domaineMetier": [
+      {
+        "nom": "Reconnaissance et traitement des carences nutritionnelles",
+        "Vocabulaire": [
+          {
+            "id": 0,
+            "nom": "Carence en calcium",
+            "description": "Symptômes incluent noircissement et pourriture des fruits à partir de la base, déformation des feuilles avec des marques de brûlure sur les bords.",
+            "Lien": [
+              {
+                "type": "IKO",
+                "terme": 1
+              },
+              {
+                "type": "ASA",
+                "terme": 2
+              }
+            ],
+            "parametres": {}
+          },
+          {
+            "id": 1,
+            "nom": "Carence en fer",
+            "description": "Feuilles jaunes avec des nervures vertes visibles.",
+            "Lien": [
+              {
+                "type": "IKO",
+                "terme": 0
+              }
+            ],
+            "parametres": {}
+          },
+          {
+            "id": 2,
+            "nom": "Carence en potassium et magnésium",
+            "description": "Bords des feuilles jaunissent ou brunissent, apparition de taches.",
+            "Lien": [
+              {
+                "type": "IKO",
+                "terme": 1
+              }
+            ],
+            "parametres": {}
+          },
+          {
+            "id": 3,
+            "nom": "Carence en nitrate",
+            "description": "Feuilles d'un vert pâle, surtout les feuilles de taille moyenne, fleurs plus petites et moins colorées.",
+            "Lien": [
+              {
+                "type": "ISA",
+                "terme": 2
+              }
+            ],
+            "parametres": {}
+          }
+        ],
+        "Procedural": [
+          {
+            "nom": "Traitement des carences en calcium",
+            "description": "Comment traiter les carences en calcium ?",
+            "etape": [
+              {
+                "numero": "C1",
+                "description": "En aquaponie/bioponie, ajouter régulièrement du calcium et du magnésium."
+              },
+              {
+                "numero": "C2",
+                "description": "En permaculture, maintenir une humidité constante et utiliser des sprays de calcium."
+              }
+            ],
+            "parametres": {}
+          },
+          {
+            "nom": "Traitement des carences en fer",
+            "description": "Comment traiter les carences en fer ?",
+            "etape": [
+              {
+                "numero": "F1",
+                "description": "Ajouter régulièrement du fer en aquaponie/bioponie."
+              },
+              {
+                "numero": "F2",
+                "description": "Dans les bacs, ajouter du compost ou du fumier et maintenir le pH en dessous de 7."
+              }
+            ],
+            "parametres": {}
+          }
+        ],
+        "ExpertiseMetier": [
+          {
+            "nom": "Identification des carences",
+            "description": "Comment identifier les carences nutritionnelles des plantes ?",
+            "regles": [
+              {
+                "nom": "Identifier carence en calcium",
+                "type": "SYMPTOME",
+                "expression": "fruits.noircissement && feuilles.deformation && feuilles.burnMarks"
+              },
+              {
+                "nom": "Identifier carence en fer",
+                "type": "SYMPTOME",
+                "expression": "feuilles.jaunissement && nervures.vertes"
+              }
+            ],
+            "parametres": {}
+          }
+        ],
+        "Experimental": [
+          {
+            "nom": "Correction de carence en calcium en aquaponie",
+            "description": "Ajouter du calcium et du magnésium régulièrement.",
+            "type": "BM",
+            "parametres": {}
+          }
+        ]
+      },
+      {
+        "nom": "Détection et traitement des maladies des plantes",
+        "Vocabulaire": [
+          {
+            "id": 4,
+            "nom": "Oïdium (Powdery Mildew)",
+            "description": "Taches blanches poudreuses sur les feuilles et les fruits.",
+            "Lien": [
+              {
+                "type": "IKO",
+                "terme": 5
+              }
+            ],
+            "parametres": {}
+          },
+          {
+            "id": 5,
+            "nom": "Mildiou (Downy Mildew)",
+            "description": "Taches angulaires jaunes devenant brunes sur les feuilles.",
+            "Lien": [
+              {
+                "type": "IKO",
+                "terme": 4
+              }
+            ],
+            "parametres": {}
+          }
+        ],
+        "Procedural": [
+          {
+            "nom": "Traitement de l'oïdium",
+            "description": "Comment traiter l'oïdium ?",
+            "etape": [
+              {
+                "numero": "O1",
+                "description": "Pulvériser du bicarbonate de potassium ou du soufre micronisé."
+              },
+              {
+                "numero": "O2",
+                "description": "Utiliser des huiles essentielles appropriées."
+              }
+            ],
+            "parametres": {}
+          },
+          {
+            "nom": "Prévention du mildiou",
+            "description": "Comment prévenir le mildiou ?",
+            "etape": [
+              {
+                "numero": "M1",
+                "description": "Éviter l'excès d'humidité et assurer une bonne ventilation."
+              },
+              {
+                "numero": "M2",
+                "description": "Arroser le matin pour éviter l'humidité nocturne."
+              }
+            ],
+            "parametres": {}
+          }
+        ],
+        "ExpertiseMetier": [
+          {
+            "nom": "Identification de l'oïdium",
+            "description": "",
+            "regles": [
+              {
+                "nom": "Identifier l'oïdium",
+                "type": "SYMPTOME",
+                "expression": "feuilles.tachesBlanchesPoudreuses || fruits.tachesBlanchesPoudreuses"
+              }
+            ],
+            "parametres": {}
+          }
+        ],
+        "Experimental": [
+          {
+            "nom": "Utilisation du bicarbonate de potassium pour l'oïdium",
+            "description": "Pulvériser du bicarbonate de potassium pour traiter l'oïdium.",
+            "type": "BM",
+            "parametres": {}
+          }
+        ]
+      },
+      {
+        "nom": "Gestion des ravageurs",
+        "Vocabulaire": [
+          {
+            "id": 6,
+            "nom": "Acariens (Spider Mites)",
+            "description": "Petites taches jaunes sur les feuilles, possible présence de toiles.",
+            "Lien": [
+              {
+                "type": "IKO",
+                "terme": 7
+              }
+            ],
+            "parametres": {}
+          },
+          {
+            "id": 7,
+            "nom": "Aleurodes (Whiteflies)",
+            "description": "Petites mouches blanches sous les feuilles, jaunissement des feuilles.",
+            "Lien": [
+              {
+                "type": "IKO",
+                "terme": 6
+              }
+            ],
+            "parametres": {}
+          },
+          {
+            "id": 8,
+            "nom": "Chenilles (Caterpillars)",
+            "description": "Trous dans les feuilles, présence de déjections noires.",
+            "Lien": [
+              {
+                "type": "IKO",
+                "terme": 9
+              }
+            ],
+            "parametres": {}
+          },
+          {
+            "id": 9,
+            "nom": "Mouches mineuses (Leaf Miners)",
+            "description": "Traces de minage visibles sur les feuilles.",
+            "Lien": [
+              {
+                "type": "IKO",
+                "terme": 8
+              }
+            ],
+            "parametres": {}
+          }
+        ],
+        "Procedural": [
+          {
+            "nom": "Traitement des acariens",
+            "description": "Comment traiter les acariens ?",
+            "etape": [
+              {
+                "numero": "A1",
+                "description": "Pulvériser de l'eau froide, retirer les parties infectées."
+              },
+              {
+                "numero": "A2",
+                "description": "Utiliser une solution d'huile de colza."
+              }
+            ],
+            "parametres": {}
+          },
+          {
+            "nom": "Traitement des aleurodes",
+            "description": "Comment traiter les aleurodes ?",
+            "etape": [
+              {
+                "numero": "AL1",
+                "description": "Utiliser des pièges collants."
+              },
+              {
+                "numero": "AL2",
+                "description": "Pulvériser une solution de savon noir."
+              }
+            ],
+            "parametres": {}
+          }
+        ],
+        "ExpertiseMetier": [
+          {
+            "nom": "Identification des acariens",
+            "description": "",
+            "regles": [
+              {
+                "nom": "Identifier les acariens",
+                "type": "SYMPTOME",
+                "expression": "feuilles.tachesJaunes && presenceToiles"
+              }
+            ],
+            "parametres": {}
+          }
+        ],
+        "Experimental": [
+          {
+            "nom": "Utilisation de l'huile de colza contre les acariens",
+            "description": "Tester l'efficacité de l'huile de colza contre les acariens.",
+            "type": "BM",
+            "parametres": {}
+          }
+        ]
+      }
+    ]
+  }
+}
+

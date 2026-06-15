@@ -1,0 +1,74 @@
+@startuml domain-class-diagram
+
+class Organisation {
+  nom: string
+}
+
+class Filiere {
+  nom: string
+}
+
+class Domaine {
+  nom: string
+}
+
+class Competence {
+  nom: string
+  description: string
+  niveau: Niveau
+  parametres: string
+}
+
+enum Niveau {
+  DEBUTANT
+  INTERMEDIAIRE
+  AVANCE
+}
+
+class Expertise {}
+class Experience {}
+class CasTheorique {
+  description: string
+}
+class ErreurMetier {
+  description: string
+}
+class Procedure {
+  nom: string
+}
+class Vocabulaire {}
+class Regle {
+  nom: string
+  Expression: string
+  Type: string
+}
+class Etape {
+  numero: int
+  description: string
+}
+class Terme {
+  id: int
+  nom: string
+  description: string
+}
+class Lien {
+  idTermeEnfant: int
+  nom: string
+  description: string
+}
+
+Organisation "1" -- "0..N" Filiere
+Filiere "1" -- "0..N" Domaine
+Domaine "1" -- "0..N" Competence
+Competence <|-- Expertise
+Competence <|-- Experience
+Competence <|-- Procedure
+Competence <|-- Vocabulaire
+Experience <|-- CasTheorique
+Experience <|-- ErreurMetier
+Expertise "0..N" -- "0..N" Regle
+Procedure "1" -- "0..N" Etape
+Vocabulaire "1" -- "0..N" Terme
+Terme "1" -- "0..N" Lien
+
+@enduml

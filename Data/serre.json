@@ -1,0 +1,361 @@
+{
+  "filliereMetier": {
+    "nom": "Serre Connectée",
+    "domaineMetier": [
+      {
+        "nom": "Gestion de la Serre",
+        "Vocabulaire": [
+          {
+            "id": 0,
+            "nom": "Localisation",
+            "description": "Emplacement géographique de la serre.",
+            "valeur": "Badevel",
+            "Lien": [],
+            "parametres": {}
+          },
+          {
+            "id": 1,
+            "nom": "Dimensions",
+            "description": "Dimensions de la serre.",
+            "Lien": [
+              {
+                "type": "ASA",
+                "terme": 2
+              },
+              {
+                "type": "ASA",
+                "terme": 3
+              }
+            ],
+            "parametres": {}
+          },
+          {
+            "id": 2,
+            "nom": "Surface",
+            "description": "Surface de la serre.",
+            "valeur": "22,53 m²",
+            "Lien": [],
+            "parametres": {}
+          },
+          {
+            "id": 3,
+            "nom": "Hauteur sous faîtière",
+            "description": "Hauteur sous faîtière de la serre.",
+            "valeur": "253 cm",
+            "Lien": [],
+            "parametres": {}
+          },
+          {
+            "id": 4,
+            "nom": "Alimentation",
+            "description": "Source d'alimentation de la serre.",
+            "valeur": "230V",
+            "Lien": [],
+            "parametres": {}
+          },
+          {
+            "id": 5,
+            "nom": "Connectivité",
+            "description": "Types de connectivité disponibles pour la serre.",
+            "Lien": [
+              {
+                "type": "IKO",
+                "terme": 6
+              },
+              {
+                "type": "IKO",
+                "terme": 7
+              },
+              {
+                "type": "IKO",
+                "terme": 8
+              },
+              {
+                "type": "IKO",
+                "terme": 9
+              },
+              {
+                "type": "IKO",
+                "terme": 10
+              }
+            ],
+            "parametres": {}
+          },
+          {
+            "id": 6,
+            "nom": "Sigfox",
+            "description": "Type de connectivité.",
+            "Lien": [],
+            "parametres": {}
+          },
+          {
+            "id": 7,
+            "nom": "Wifi",
+            "description": "Type de connectivité.",
+            "Lien": [],
+            "parametres": {}
+          },
+          {
+            "id": 8,
+            "nom": "Ethernet",
+            "description": "Type de connectivité.",
+            "Lien": [],
+            "parametres": {}
+          },
+          {
+            "id": 9,
+            "nom": "Zigbee",
+            "description": "Type de connectivité.",
+            "Lien": [],
+            "parametres": {}
+          },
+          {
+            "id": 10,
+            "nom": "5G",
+            "description": "Type de connectivité.",
+            "Lien": [],
+            "parametres": {}
+          },
+          {
+            "id": 11,
+            "nom": "Résistance",
+            "description": "Capacités de résistance de la serre.",
+            "Lien": [
+              {
+                "type": "ASA",
+                "terme": 12
+              },
+              {
+                "type": "ASA",
+                "terme": 13
+              }
+            ],
+            "parametres": {}
+          },
+          {
+            "id": 12,
+            "nom": "Vent",
+            "description": "Résistance au vent.",
+            "valeur": "100 km/h",
+            "Lien": [],
+            "parametres": {}
+          },
+          {
+            "id": 13,
+            "nom": "Neige et Grêle",
+            "description": "Résistance à la neige et à la grêle.",
+            "valeur": "50-75 kg/m²",
+            "Lien": [],
+            "parametres": {}
+          }
+        ],
+        "Procedural": [
+          {
+            "nom": "Pilotage de la Serre",
+            "description": "Procédures de pilotage de la serre.",
+            "etape": [
+              {
+                "numero": "P1",
+                "description": "Piloter l'ambiance.",
+                "relation": "ASA"
+              },
+              {
+                "numero": "P2",
+                "description": "Piloter l'eau.",
+                "relation": "ASA"
+              },
+              {
+                "numero": "P3",
+                "description": "Piloter l'énergie.",
+                "relation": "ASA"
+              },
+              {
+                "numero": "P4",
+                "description": "Gérer les robots (farmbot).",
+                "relation": "ASA"
+              }
+            ],
+            "parametres": {}
+          }
+        ],
+        "ExpertiseMetier": [
+          {
+            "nom": "Système de Culture",
+            "description": "Composants et capacités des systèmes de culture.",
+            "regles": [
+              {
+                "nom": "Bassin à Poissons",
+                "type": "ASA",
+                "expression": "Capacité : 1200l, Bulleur intégré : true",
+                "parametres": {}
+              },
+              {
+                "nom": "Tours de Culture ZipGrow",
+                "type": "ASA",
+                "expression": "Capacité : 24 tours",
+                "parametres": {}
+              },
+              {
+                "nom": "Table de Travail",
+                "type": "ASA",
+                "expression": "",
+                "parametres": {}
+              }
+            ],
+            "parametres": {}
+          }
+        ],
+        "Experimental": [
+          {
+            "nom": "Gestion des Végétaux et des Poissons",
+            "description": "Actions et soins pour les végétaux et les poissons.",
+            "type": "BM",
+            "parametres": {}
+          },
+          {
+            "nom": "Actions contre les Ravageurs",
+            "description": "Méthodes pour combattre les ravageurs.",
+            "type": "CE",
+            "parametres": {}
+          },
+          {
+            "nom": "Maladies des Végétaux",
+            "description": "",
+            "type": "BM",
+            "parametres": {}
+          },
+          {
+            "nom": "Nutrition et Soins des Poissons",
+            "description": "Soins spécifiques pour les poissons.",
+            "type": "CE",
+            "parametres": {}
+          }
+        ]
+      }
+    ]
+  },
+  "ListeDesComposantsDeLaSerre": {
+    "SerreDoubleFamilyMyFoodX2": {
+      "BacEnBioponieZipgrow": [
+        {
+          "ColonnesDePlantation": 16,
+          "Pompe": 1,
+          "Rechauffeurs": 2,
+          "relation": "ASA"
+        },
+        {
+          "ColonnesDePlantation": 16,
+          "Pompe": 1,
+          "Rechauffeur": 1,
+          "relation": "ASA"
+        }
+      ],
+      "BacsPerma": 10,
+      "Lampe": 1,
+      "ExtracteurDAir": 1,
+      "Incubateurs": 5,
+      "relation": "ASA"
+    },
+    "Energie": {
+      "DoubleSerreMyFood": {
+        "PanneauxPhotovoltaïques": {
+          "Quantite": 8,
+          "Puissance": "200W peak",
+          "relation": "ASA"
+        },
+        "Batteries": {
+          "Quantite": 4,
+          "Type": "12V plomb",
+          "relation": "ASA"
+        },
+        "SystemeEclairageLED": true,
+        "relation": "ASA"
+      },
+      "Cabanes": [
+        {
+          "type": "RangeRobotFarmbot",
+          "genesys": 1,
+          "express": 2,
+          "HubEnergie": {
+            "Onduleur": 1,
+            "Disjoncteur": 1,
+            "UCCentralisee": 1,
+            "Box5G": 1,
+            "relation": "ASA"
+          },
+          "relation": "ASA"
+        },
+        {
+          "type": "CabanesVides",
+          "usage": "rangement outils",
+          "relation": "ASA"
+        },
+        {
+          "type": "VoletRoulantElectrique",
+          "relation": "ASA"
+        },
+        {
+          "PanneauxPhotovoltaïques": {
+            "Quantite": 1,
+            "Puissance": "400W peak",
+            "relation": "ASA"
+          },
+          "relation": "ASA"
+        }
+      ],
+      "PoeleAPellets": {
+        "stock": "dans une cabane",
+        "relation": "ASA"
+      },
+      "relation": "ASA"
+    },
+    "Eau": {
+      "BacsRecuperationEauDePluie": {
+        "Quantite": 6,
+        "Capacite": "300L chacun",
+        "relation": "ASA"
+      },
+      "CuveEnterree": {
+        "capacite": "1500L",
+        "relieeALaSerre": true,
+        "PompeImmergee": true,
+        "relation": "ASA"
+      },
+      "relation": "ASA"
+    },
+    "Composteurs": {
+      "relation": "ASA"
+    }
+  },
+  "ApplicationMyFoodHub": {
+    "SuiviDesDonnees": {
+      "Collecte": "30 minutes",
+      "relation": "ASA"
+    },
+    "AlertesEtNotifications": {
+      "relation": "ASA"
+    },
+    "AccesADistance": {
+      "Tablette": true,
+      "Smartphone": true,
+      "Ordinateur": true,
+      "relation": "ASA"
+    },
+    "relation": "ASA"
+  },
+  "Maintenance": {
+    "CalendrierDeMaintenance": {
+      "relation": "ASA"
+    },
+    "NettoyageDuSystemeDeFiltration": {
+      "relation": "ASA"
+    },
+    "VerificationDesSondesEtCapteurs": {
+      "relation": "ASA"
+    },
+    "EntretienDesPanneauxSolaires": {
+      "relation": "ASA"
+    },
+    "relation": "ASA"
+  }
+}

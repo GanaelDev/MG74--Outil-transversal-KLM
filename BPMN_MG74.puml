@@ -1,0 +1,67 @@
+@startuml BPMN_MG74
+' BPMN du projet MG74
+partition "jsonVisualisationTool" {
+    partition "lancer l'application" {
+        start
+        :Ouvrir le terminal;
+        :Aller dans le dossier jsonVisualisationTool;
+        :Installer les dépendances (npm install);
+        :Lancer l'application (npm run dev);
+        stop
+    }
+    partition "visualiser un fichier JSON en Graphe" {
+        start
+        :Lancer l'application;
+        :Upload JSON via le Frontend;
+        :Naviguer dans le Graphe;
+        :Cliquer sur un noeud pour voir les détails;
+        stop
+    }
+}
+
+partition "neo4j" {
+    partition "lancer Neo4j" {
+        start
+        :Ouvrir le terminal;
+        :Aller dans le dossier neo4j;
+        if (Windows?) then (oui)
+          :Exécuter start-neo4j.ps1;
+        else (non)
+          :Exécuter start-neo4j.sh;
+        endif
+        stop
+    }
+
+    partition "importer un fichier JSON contenant des connaissances" {
+        start
+        :Convertir le fichier JSON en CYPHER via un script Python;
+        :import le fichier CYPHER dans Neo4j avec le script import-cypher.ps1;
+        stop
+    }
+
+    partition "exporter un fichier JSON avec toutes les connaissances" {
+        start
+        :Ouvrir l'interface web de Neo4j;
+        :Executer la requête "MATCH (n) RETURN n" pour obtenir toutes les connaissances;
+        :Exporter les résultats au format JSON;
+        stop
+    }
+
+    partition "accéder au connaissance" {
+        start
+        :Ouvrir Telegram;
+        :Demander la connaissance à l'IA;
+        :Recevoir la réponse de l'IA;
+        stop
+    }
+
+    partition "mise à jour des connaissances" {
+        start
+        :Acquérir les nouvelles connaissances;
+        :Réalisation des requêtes pour mettre à jour le graphe;
+        :Mettre à jour le graphe;
+        :Vérifier l'intégrité des données;
+        stop
+    }
+}
+@enduml

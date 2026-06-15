@@ -1,0 +1,287 @@
+{
+  "filliereMetier": {
+    "nom": "Maison Inclusive",
+    "domaineMetier": [
+      {
+        "nom": "Gestion de l'énergie",
+        "Vocabulaire": [
+          {
+            "id": 0,
+            "nom": "PanneauxPhotovoltaiques",
+            "description": "Dispositif convertissant la lumière solaire en énergie électrique.",
+            "Lien": [
+              {
+                "type": "CONTIENT",
+                "terme": 6
+              },
+              {
+                "type": "STOCKE_L_ENERGIE",
+                "terme": 2
+              }
+            ],
+            "parametres": {
+              "surface": "double",
+              "efficacite": "double"
+            }
+          },
+          {
+            "id": 1,
+            "nom": "Batterie",
+            "description": "Dispositif de stockage de l'énergie électrique.",
+            "Lien": [
+              {
+                "type": "STOCKE_L_ENERGIE",
+                "terme": 6
+              },
+              {
+                "type": "STOCKE_L_ENERGIE",
+                "terme": 0
+              }
+            ],
+            "parametres": {
+              "capacite": "double",
+              "etatCharge": "double"
+            }
+          },
+          {
+            "id": 2,
+            "nom": "PompeChaleur",
+            "description": "Dispositif permettant de produire de la chaleur à partir de l'air extérieur.",
+            "Lien": [
+              {
+                "type": "CONTIENT",
+                "terme": 6
+              }
+            ],
+            "parametres": {}
+          },
+          {
+            "id": 3,
+            "nom": "ChaudiereGranule",
+            "description": "Chaudière utilisant des granulés de bois pour produire de la chaleur.",
+            "Lien": [
+              {
+                "type": "CONTIENT",
+                "terme": 6
+              }
+            ],
+            "parametres": {
+              "type": "type"
+            }
+          }
+        ],
+        "Procedural": [
+          {
+            "nom": "Installation d'un Panneau Photovoltaïque",
+            "description": "Comment installer un panneau photovoltaïque pour optimiser l'efficacité énergétique ?",
+            "etape": [
+              {
+                "numero": "A1",
+                "description": "Choisir un emplacement ensoleillé sur le toit."
+              },
+              {
+                "numero": "A2",
+                "description": "Fixer les supports de montage."
+              },
+              {
+                "numero": "A3",
+                "description": "Installer les panneaux et connecter au système électrique."
+              }
+            ],
+            "parametres": {}
+          }
+        ],
+        "ExpertiseMetier": [
+          {
+            "nom": "Calcul de la capacité de stockage de la Batterie",
+            "description": "",
+            "regles": [
+              {
+                "nom": "Capacité totale disponible",
+                "type": "MATH",
+                "expression": "capacite * etatCharge",
+                "parametres": {
+                  "capacite": null,
+                  "etatCharge": null
+                }
+              }
+            ],
+            "parametres": {}
+          }
+        ],
+        "Experimental": [
+          {
+            "nom": "Optimisation de la production d'énergie",
+            "description": "Ajustement des angles des panneaux photovoltaïques pour une meilleure performance.",
+            "type": "BM",
+            "parametres": {}
+          }
+        ]
+      },
+      {
+        "nom": "Gestion de l'eau",
+        "Vocabulaire": [
+          {
+            "id": 4,
+            "nom": "BacRecuperationEauPluie",
+            "description": "Dispositif collectant l'eau de pluie pour divers usages.",
+            "Lien": [
+              {
+                "type": "CONTIENT",
+                "terme": 6
+              }
+            ],
+            "parametres": {
+              "capacite": "double"
+            }
+          },
+          {
+            "id": 5,
+            "nom": "BallonEauChaudeThermodynamique",
+            "description": "Dispositif de chauffage de l'eau utilisant une pompe à chaleur intégrée.",
+            "Lien": [
+              {
+                "type": "CONTIENT",
+                "terme": 6
+              }
+            ],
+            "parametres": {
+              "capacite": "double"
+            }
+          }
+        ],
+        "Procedural": [
+          {
+            "nom": "Installation d'un Bac de Récupération d'Eau de Pluie",
+            "description": "Comment installer un bac de récupération d'eau de pluie ?",
+            "etape": [
+              {
+                "numero": "B1",
+                "description": "Choisir un emplacement pour le bac."
+              },
+              {
+                "numero": "B2",
+                "description": "Connecter le bac au système de gouttière."
+              },
+              {
+                "numero": "B3",
+                "description": "Installer un filtre pour les débris."
+              }
+            ],
+            "parametres": {}
+          }
+        ],
+        "ExpertiseMetier": [
+          {
+            "nom": "Calcul de la capacité de récupération d'eau",
+            "description": "",
+            "regles": [
+              {
+                "nom": "Capacité totale récupérable",
+                "type": "MATH",
+                "expression": "surfaceToit * coefficientPluie",
+                "parametres": {
+                  "surfaceToit": null,
+                  "coefficientPluie": null
+                }
+              }
+            ],
+            "parametres": {}
+          }
+        ],
+        "Experimental": [
+          {
+            "nom": "Optimisation de la collecte d'eau de pluie",
+            "description": "Ajustement de l'inclinaison des gouttières pour une meilleure collecte.",
+            "type": "BM",
+            "parametres": {}
+          }
+        ]
+      },
+      {
+        "nom": "Gestion de la ventilation",
+        "Vocabulaire": [
+          {
+            "id": 6,
+            "nom": "VMC",
+            "description": "Ventilation mécanique contrôlée assurant le renouvellement de l'air dans la maison.",
+            "Lien": [
+              {
+                "type": "CONTIENT",
+                "terme": 6
+              },
+              {
+                "type": "RECHAUFFE_L_AIR",
+                "terme": 7
+              }
+            ],
+            "parametres": {}
+          },
+          {
+            "id": 7,
+            "nom": "PuitCanadien",
+            "description": "Système de ventilation utilisant la géothermie pour réchauffer ou refroidir l'air.",
+            "Lien": [
+              {
+                "type": "CONTIENT",
+                "terme": 6
+              },
+              {
+                "type": "RECHAUFFE_L_AIR",
+                "terme": 6
+              }
+            ],
+            "parametres": {}
+          }
+        ],
+        "Procedural": [
+          {
+            "nom": "Installation d'un Système de VMC",
+            "description": "Comment installer un système de VMC pour une ventilation efficace ?",
+            "etape": [
+              {
+                "numero": "C1",
+                "description": "Choisir les emplacements des bouches d'aération."
+              },
+              {
+                "numero": "C2",
+                "description": "Installer les conduits de ventilation."
+              },
+              {
+                "numero": "C3",
+                "description": "Connecter le système à une source d'énergie."
+              }
+            ],
+            "parametres": {}
+          }
+        ],
+        "ExpertiseMetier": [
+          {
+            "nom": "Calcul de la capacité de ventilation",
+            "description": "",
+            "regles": [
+              {
+                "nom": "Capacité totale de ventilation",
+                "type": "MATH",
+                "expression": "volumeAir * coefficientRenouvellement",
+                "parametres": {
+                  "volumeAir": null,
+                  "coefficientRenouvellement": null
+                }
+              }
+            ],
+            "parametres": {}
+          }
+        ],
+        "Experimental": [
+          {
+            "nom": "Optimisation du système de ventilation",
+            "description": "Ajustement des conduits pour une meilleure circulation de l'air.",
+            "type": "BM",
+            "parametres": {}
+          }
+        ]
+      }
+    ]
+  }
+}

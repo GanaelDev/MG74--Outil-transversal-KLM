@@ -1,0 +1,191 @@
+{
+    "filliereMetier": {
+      "nom": "Patients âgés",
+      "domaineMetier": [
+        {
+          "nom": "Identification des symptômes",
+          "Vocabulaire": [
+            {
+              "id": 0,
+              "nom": "Douleur thoracique",
+              "description": "Sensation de douleur ou de pression dans la région de la poitrine.",
+              "Lien": [],
+              "parametres": {}
+            },
+            {
+              "id": 1,
+              "nom": "Essoufflement",
+              "description": "Difficulté à respirer ou sensation de manque d'air.",
+              "Lien": [],
+              "parametres": {}
+            },
+            {
+              "id": 2,
+              "nom": "Fatigue",
+              "description": "Sensation de fatigue ou d'épuisement extrême.",
+              "Lien": [],
+              "parametres": {}
+            },
+            {
+              "id": 3,
+              "nom": "Confusion",
+              "description": "Troubles de la mémoire, difficulté à se concentrer ou à comprendre.",
+              "Lien": [],
+              "parametres": {}
+            }
+          ],
+          "Procedural": [
+            {
+              "nom": "Évaluation de la douleur thoracique",
+              "description": "Comment évaluer la douleur thoracique ?",
+              "etape": [
+                {
+                  "numero": "D1",
+                  "description": "Interroger le patient sur l'emplacement, l'intensité et la durée de la douleur."
+                },
+                {
+                  "numero": "D2",
+                  "description": "Observer les signes vitaux et effectuer un électrocardiogramme (ECG)."
+                }
+              ],
+              "parametres": {}
+            },
+            {
+              "nom": "Évaluation de l'essoufflement",
+              "description": "Comment évaluer l'essoufflement ?",
+              "etape": [
+                {
+                  "numero": "E1",
+                  "description": "Mesurer la fréquence respiratoire et la saturation en oxygène."
+                },
+                {
+                  "numero": "E2",
+                  "description": "Effectuer une auscultation pulmonaire."
+                }
+              ],
+              "parametres": {}
+            }
+          ],
+          "ExpertiseMetier": [
+            {
+              "nom": "Interprétation des symptômes",
+              "description": "Comment interpréter les symptômes pour diagnostiquer les maladies ?",
+              "regles": [
+                {
+                  "nom": "Douleur thoracique suspecte d'angine",
+                  "type": "SYMPTOME",
+                  "expression": "douleurThoracique && essoufflement && fatigue"
+                },
+                {
+                  "nom": "Confusion suspecte de démence",
+                  "type": "SYMPTOME",
+                  "expression": "confusion && troublesMemoire"
+                }
+              ],
+              "parametres": {}
+            }
+          ],
+          "Experimental": [
+            {
+              "nom": "Suivi de la douleur thoracique",
+              "description": "Enregistrer les épisodes de douleur thoracique et leurs déclencheurs potentiels.",
+              "type": "BM",
+              "parametres": {}
+            }
+          ]
+        },
+        {
+          "nom": "Traitement des maladies",
+          "Vocabulaire": [
+            {
+              "id": 4,
+              "nom": "Angine de poitrine",
+              "description": "Douleur thoracique due à une réduction du flux sanguin vers le cœur.",
+              "Lien": [],
+              "parametres": {}
+            },
+            {
+              "id": 5,
+              "nom": "Insuffisance cardiaque",
+              "description": "Condition où le cœur ne pompe pas le sang aussi efficacement qu'il le devrait.",
+              "Lien": [],
+              "parametres": {}
+            },
+            {
+              "id": 6,
+              "nom": "Pneumonie",
+              "description": "Infection qui enflamme les sacs aériens dans un ou les deux poumons.",
+              "Lien": [],
+              "parametres": {}
+            },
+            {
+              "id": 7,
+              "nom": "Démence",
+              "description": "Déclin de la fonction cognitive suffisamment sévère pour interférer avec la vie quotidienne.",
+              "Lien": [],
+              "parametres": {}
+            }
+          ],
+          "Procedural": [
+            {
+              "nom": "Traitement de l'angine de poitrine",
+              "description": "Comment traiter l'angine de poitrine ?",
+              "etape": [
+                {
+                  "numero": "A1",
+                  "description": "Administrer des nitrates pour soulager la douleur."
+                },
+                {
+                  "numero": "A2",
+                  "description": "Recommander des changements de mode de vie, y compris un régime alimentaire sain et l'exercice."
+                }
+              ],
+              "parametres": {}
+            },
+            {
+              "nom": "Traitement de l'insuffisance cardiaque",
+              "description": "Comment traiter l'insuffisance cardiaque ?",
+              "etape": [
+                {
+                  "numero": "IC1",
+                  "description": "Administrer des diurétiques pour réduire la rétention de liquide."
+                },
+                {
+                  "numero": "IC2",
+                  "description": "Surveiller régulièrement la fonction cardiaque et ajuster les médicaments selon les besoins."
+                }
+              ],
+              "parametres": {}
+            }
+          ],
+          "ExpertiseMetier": [
+            {
+              "nom": "Gestion des maladies chroniques",
+              "description": "Comment gérer les maladies chroniques chez les patients âgés ?",
+              "regles": [
+                {
+                  "nom": "Gestion de l'angine de poitrine",
+                  "type": "TRAITEMENT",
+                  "expression": "suiviDouleurThoracique && administrationNitrates"
+                },
+                {
+                  "nom": "Gestion de l'insuffisance cardiaque",
+                  "type": "TRAITEMENT",
+                  "expression": "administrationDiuretiques && suiviFonctionCardiaque"
+                }
+              ],
+              "parametres": {}
+            }
+          ],
+          "Experimental": [
+            {
+              "nom": "Essai d'un nouveau régime pour l'angine",
+              "description": "Tester l'impact d'un régime pauvre en graisses saturées sur les symptômes de l'angine.",
+              "type": "CE",
+              "parametres": {}
+            }
+          ]
+        }
+      ]
+    }
+  }

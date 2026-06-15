@@ -1,0 +1,182 @@
+{
+  "filliereMetier": {
+    "nom": "Smart City",
+    "domaineMetier": [
+      {
+        "nom": "Gestion de l'Énergie Solaire et du Stockage",
+        "Vocabulaire": [
+          {
+            "id": 0,
+            "nom": "Panneaux Solaires",
+            "description": "Dispositifs qui convertissent l'énergie solaire en énergie électrique.",
+            "Lien": [
+              {
+                "type": "ASA",
+                "terme": 1
+              },
+              {
+                "type": "ASA",
+                "terme": 2
+              }
+            ],
+            "parametres": {}
+          },
+          {
+            "id": 1,
+            "nom": "Ombrière Solaire",
+            "description": "Structure de protection équipée de panneaux solaires, souvent utilisée dans les parkings.",
+            "Lien": [],
+            "parametres": {}
+          },
+          {
+            "id": 2,
+            "nom": "Borne de Recharge",
+            "description": "Station permettant la recharge des véhicules électriques.",
+            "Lien": [],
+            "parametres": {}
+          },
+          {
+            "id": 3,
+            "nom": "Candélabres",
+            "description": "Lampadaires équipés de capteurs pour une gestion intelligente de l'éclairage public.",
+            "Lien": [],
+            "parametres": {}
+          },
+          {
+            "id": 4,
+            "nom": "Poubelles connectées",
+            "description": "Poubelles équipées de capteurs pour une gestion efficace des déchets.",
+            "Lien": [],
+            "parametres": {}
+          }
+        ],
+        "Procedural": [
+          {
+            "nom": "Gestion des Panneaux Solaires",
+            "description": "Comment optimiser l'utilisation des panneaux solaires.",
+            "etape": [
+              {
+                "numero": "A1",
+                "description": "Surveiller la production photovoltaïque quotidiennement."
+              },
+              {
+                "numero": "A2",
+                "description": "Ajuster la répartition de l'énergie en fonction de la production."
+              },
+              {
+                "numero": "A3",
+                "description": "Prioriser la recharge des batteries et la production d'hydrogène lorsque la production est élevée."
+              },
+              {
+                "numero": "A4",
+                "description": "Limiter la décharge des batteries et optimiser l'utilisation d'hydrogène lorsque la production est faible."
+              }
+            ],
+            "parametres": {}
+          }
+        ],
+        "ExpertiseMetier": [
+          {
+            "nom": "Gestion de la Production Photovoltaïque",
+            "description": "Règles pour optimiser la production et l'utilisation de l'énergie solaire.",
+            "regles": [
+              {
+                "nom": "Prioriser l'utilisation de l'énergie solaire",
+                "type": "LOGIQUE",
+                "expression": "productionPhotovoltaïque > 700",
+                "parametres": {
+                  "productionPhotovoltaïque": null
+                }
+              },
+              {
+                "nom": "Limiter la décharge des batteries",
+                "type": "LOGIQUE",
+                "expression": "productionPhotovoltaïque < 400",
+                "parametres": {
+                  "productionPhotovoltaïque": null
+                }
+              },
+              {
+                "nom": "Limiter l'utilisation des équipements non essentiels",
+                "type": "LOGIQUE",
+                "expression": "niveauChargeBatteries < 60",
+                "parametres": {
+                  "niveauChargeBatteries": null
+                }
+              }
+            ],
+            "parametres": {}
+          }
+        ],
+        "Experimental": [
+          {
+            "nom": "Optimisation de la Recharge Électrique",
+            "description": "Stratégies pour maximiser l'efficacité de la recharge des véhicules électriques.",
+            "type": "BM",
+            "parametres": {}
+          },
+          {
+            "nom": "Maintenance des Panneaux Solaires",
+            "description": "Procédures pour assurer la performance optimale des panneaux solaires.",
+            "type": "CE",
+            "parametres": {}
+          }
+        ],
+        "ReglesSpecifiquesRues": [
+          {
+            "nomRue": "Rue de Saint-Dizier",
+            "regles": [
+              {
+                "condition": "intensiteLumineuseActuelle > intensiteLumineuseGrandeRue",
+                "action": "reduireIntensiteLumineuseCandelabres(10%)"
+              },
+              {
+                "condition": "heureActuelle >= 00:00 && heureActuelle <= 05:00",
+                "action": "reduireIntensiteLumineuseCandelabres(20%)"
+              }
+            ]
+          },
+          {
+            "nomRue": "Rue de Beaucourt",
+            "regles": [
+              {
+                "condition": "consommationEnergetique > consommationRueDesVergers",
+                "action": "ajusterEclairage(-15%)"
+              },
+              {
+                "condition": "heureActuelle >= 00:00 && heureActuelle <= 05:00",
+                "action": "reduireIntensiteLumineuseCandelabres(20%)"
+              }
+            ]
+          },
+          {
+            "nomRue": "Rue de Delle",
+            "regles": [
+              {
+                "condition": "consommationEnergetique > consommationRueDuMavuron",
+                "action": "reduireIntensiteLumineuseCandelabres(10%)"
+              },
+              {
+                "condition": "heureActuelle >= 00:00 && heureActuelle <= 05:00",
+                "action": "reduireIntensiteLumineuseCandelabres(20%)"
+              }
+            ]
+          },
+          {
+            "nomRue": "Rue du Mavuron",
+            "regles": [
+              {
+                "condition": "consommationEnergetique > consommationRueDeSaintDizier",
+                "action": "ajusterEclairage(-10%)"
+              },
+              {
+                "condition": "heureActuelle >= 00:00 && heureActuelle <= 05:00",
+                "action": "reduireIntensiteLumineuseCandelabres(20%)"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
