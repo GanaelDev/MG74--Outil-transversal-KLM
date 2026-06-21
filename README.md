@@ -6,7 +6,7 @@ Ce projet propose une plateforme complète pour la gestion, la visualisation et 
 
 - **Data/** :
   - Fichiers JSON métier (ex : `Cuisine.json`, `maison_inclusive.json`, etc.)
-  - Script Python `jsonToCypher.py` pour convertir un JSON métier en requêtes Cypher importables dans Neo4j.
+  - Script Python `generate_cypher.py` qui convertit **tous** les JSON de `Data/` en un unique `neo4jDocker/data.cypher` cohérent (importable dans Neo4j).
 - **jsonVisualisationTool/** :
   - Application web React/TypeScript pour visualiser et explorer les graphes issus des fichiers JSON.
   - Visualisation interactive (drag & drop, détails des nœuds, navigation graphique).
@@ -20,8 +20,8 @@ Ce projet propose une plateforme complète pour la gestion, la visualisation et 
 
 - **Import de connaissances** :
   - Écrire ou modifier un fichier JSON métier dans `Data/`.
-  - Convertir ce JSON en Cypher avec `jsonToCypher.py`.
-  - Importer le Cypher dans Neo4j via Docker avec `import-cypher.ps1`.
+  - Régénérer `data.cypher` avec `generate_cypher.py`.
+  - Importer dans Neo4j via Docker (`docker compose --profile import up import`).
 - **Visualisation** :
   - Lancer l'application web dans `jsonVisualisationTool/` pour explorer le graphe de connaissances (voir section suivante).
 - **Export** :
@@ -54,18 +54,18 @@ docker compose down -v    # tout supprimer, y compris les données (reset comple
 docker compose logs -f neo4j   # suivre les logs
 ```
 
-### 2. Importer un fichier JSON métier dans Neo4j
+### 2. (Re)générer les données métier depuis les JSON
 
 - Placer votre fichier JSON dans `Data/` (ex : `Cuisine.json`).
-- Convertir en Cypher :
+- Régénérer `data.cypher` depuis **tous** les JSON de `Data/` :
   ```bash
   cd Data
-  python jsonToCypher.py
+  python3 generate_cypher.py
   ```
 - Importer dans Neo4j :
-  ```powershell
+  ```bash
   cd ../neo4jDocker
-  ./import-cypher.ps1 -cypherFile ../Data/Cuisine.cypher
+  docker compose --profile import up import
   ```
 
 ### 3. Visualiser le graphe métier
