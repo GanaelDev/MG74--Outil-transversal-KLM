@@ -192,28 +192,30 @@ export const NodeDetails: React.FC<NodeDetailsProps> = ({ node, onClose }) => {
   };
 
   return (
-    <div className="h-full flex flex-col">
-      <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-gray-50 gap-2">
-        <div className="flex items-center gap-3 min-w-0">
-          <div className={`p-2 rounded-lg ${node.color?.background ? `bg-opacity-20` : 'bg-gray-100'}`}
-               style={{ backgroundColor: `${node.color?.background}20` }}>
+    <div className="flex h-full flex-col animate-slide-in-right">
+      <div className="flex items-center justify-between gap-2 border-b border-slate-200 bg-slate-50/80 p-4">
+        <div className="flex min-w-0 items-center gap-3">
+          <div
+            className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg"
+            style={{ backgroundColor: `${node.color?.background}1A`, color: node.color?.background }}
+          >
             {getIcon()}
           </div>
           <div className="min-w-0">
-            <h3 className="font-semibold text-gray-900 truncate max-w-[12rem] md:max-w-[16rem] lg:max-w-[20rem]" title={node.label}>{node.label}</h3>
-            <p className="text-sm text-gray-500 truncate">{getTypeLabel()}</p>
+            <h3 className="truncate font-semibold text-slate-900" title={node.label}>{node.label}</h3>
+            <p className="truncate text-sm text-slate-500">{getTypeLabel()}</p>
           </div>
         </div>
         <button
           onClick={onClose}
-          className="p-1 hover:bg-gray-200 rounded-full transition-colors flex-shrink-0"
+          className="flex-shrink-0 rounded-full p-1.5 text-slate-500 transition-colors hover:bg-slate-200 hover:text-slate-700"
           title="Fermer"
         >
-          <X className="w-4 h-4" />
+          <X className="h-4 w-4" />
         </button>
       </div>
-      
-      <div className="flex-1 p-4 overflow-y-auto">
+
+      <div className="scrollbar-thin flex-1 overflow-y-auto p-4">
         {renderContent()}
       </div>
     </div>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Network, Upload, Database } from 'lucide-react';
+import { Share2, Upload, Database } from 'lucide-react';
 
 interface HeaderProps {
   onUploadClick: () => void;
@@ -9,35 +9,33 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ onUploadClick, onLoadNeo4j, hasData }) => {
   return (
-    <header className="bg-white shadow-sm border-b border-gray-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-blue-600 rounded-lg">
-              <Network className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <h1 className="text-xl font-bold text-gray-900">GraphMétier</h1>
-              <p className="text-sm text-gray-500">Visualisateur de données métier</p>
-            </div>
+    <header className="sticky top-0 z-20 border-b border-slate-200 bg-white/80 backdrop-blur-md">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-brand-500 to-brand-700 shadow-sm">
+            <Share2 className="h-5 w-5 text-white" />
           </div>
-          
-          <div className="flex items-center gap-2">
-            <button
-              onClick={onLoadNeo4j}
-              className="flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
-            >
-              <Database className="w-4 h-4" />
-              Neo4j
-            </button>
-            <button
-              onClick={onUploadClick}
-              className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              <Upload className="w-4 h-4" />
-              {hasData ? 'Charger un autre fichier' : 'Charger un fichier JSON'}
-            </button>
+          <div className="leading-tight">
+            <h1 className="text-lg font-semibold tracking-tight text-slate-900">GraphMétier</h1>
+            <p className="text-xs text-slate-500">Visualisateur de connaissances métier</p>
           </div>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <button
+            onClick={onLoadNeo4j}
+            className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3.5 py-2 text-sm font-medium text-slate-700 shadow-sm transition-colors hover:border-slate-300 hover:bg-slate-50"
+          >
+            <Database className="h-4 w-4 text-emerald-600" />
+            <span className="hidden sm:inline">Neo4j</span>
+          </button>
+          <button
+            onClick={onUploadClick}
+            className="inline-flex items-center gap-2 rounded-lg bg-brand-600 px-3.5 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-brand-700"
+          >
+            <Upload className="h-4 w-4" />
+            <span className="hidden sm:inline">{hasData ? 'Charger un autre fichier' : 'Charger un JSON'}</span>
+          </button>
         </div>
       </div>
     </header>

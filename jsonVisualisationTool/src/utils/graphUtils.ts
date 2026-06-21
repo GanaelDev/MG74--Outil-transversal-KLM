@@ -25,6 +25,12 @@ export const nodeColors = {
     background: '#EF4444',
     border: '#DC2626',
     highlight: { background: '#F87171', border: '#DC2626' }
+  },
+  // Nœud « Competence » : niveau intermédiaire abstrait (entre Domaine et les 4 types).
+  competence: {
+    background: '#64748B',
+    border: '#475569',
+    highlight: { background: '#94A3B8', border: '#475569' }
   }
 };
 
@@ -32,17 +38,26 @@ export function transformDataToGraph(data: FiliereMetier): { nodes: GraphNode[],
   const nodes: GraphNode[] = [];
   const edges: GraphEdge[] = [];
 
+  // Le fichier uploadé peut ne pas respecter le format attendu : on valide pour
+  // éviter une exception qui ferait planter tout le rendu.
+  const filiere = data?.filliereMetier;
+  if (!filiere || !Array.isArray(filiere.domaineMetier)) {
+    throw new Error(
+      "Format JSON invalide : la clé 'filliereMetier' (avec un tableau 'domaineMetier') est attendue."
+    );
+  }
+
   // Add main filiere node
   nodes.push({
     id: 'filiere-main',
-    label: data.filliereMetier.nom,
+    label: filiere.nom,
     group: 'domain',
-    title: `Filière: ${data.filliereMetier.nom}`,
+    title: `Filière: ${filiere.nom}`,
     color: nodeColors.domain,
-    data: { type: 'filiere', ...data.filliereMetier }
+    data: { type: 'filiere', ...filiere }
   });
 
-  data.filliereMetier.domaineMetier.forEach((domaine, domaineIndex) => {
+  filiere.domaineMetier.forEach((domaine, domaineIndex) => {
     const domaineId = `domaine-${domaineIndex}`;
     
     // Add domain node
@@ -64,7 +79,7 @@ export function transformDataToGraph(data: FiliereMetier): { nodes: GraphNode[],
     });
 
     // Add vocabulary nodes
-    domaine.Vocabulaire.forEach((vocab) => {
+    (domaine.Vocabulaire ?? []).forEach((vocab) => {
       const vocabId = `vocab-${vocab.id}`;
       nodes.push({
         id: vocabId,
@@ -84,7 +99,7 @@ export function transformDataToGraph(data: FiliereMetier): { nodes: GraphNode[],
       });
 
       // Add vocabulary links
-      vocab.Lien.forEach((lien, linkIndex) => {
+      (vocab.Lien ?? []).forEach((lien, linkIndex) => {
         const targetId = `vocab-${lien.terme}`;
         edges.push({
           id: `${vocabId}-${targetId}-${linkIndex}`,
@@ -97,7 +112,7 @@ export function transformDataToGraph(data: FiliereMetier): { nodes: GraphNode[],
     });
 
     // Add procedural nodes
-    domaine.Procedural.forEach((proc, procIndex) => {
+    (domaine.Procedural ?? []).forEach((proc, procIndex) => {
       const procId = `proc-${domaineIndex}-${procIndex}`;
       nodes.push({
         id: procId,
@@ -117,7 +132,7 @@ export function transformDataToGraph(data: FiliereMetier): { nodes: GraphNode[],
     });
 
     // Add expertise nodes
-    domaine.ExpertiseMetier.forEach((expertise, expIndex) => {
+    (domaine.ExpertiseMetier ?? []).forEach((expertise, expIndex) => {
       const expId = `exp-${domaineIndex}-${expIndex}`;
       nodes.push({
         id: expId,
@@ -137,7 +152,7 @@ export function transformDataToGraph(data: FiliereMetier): { nodes: GraphNode[],
     });
 
     // Add experimental nodes
-    domaine.Experimental.forEach((experimental, experimIndex) => {
+    (domaine.Experimental ?? []).forEach((experimental, experimIndex) => {
       const experimId = `experim-${domaineIndex}-${experimIndex}`;
       nodes.push({
         id: experimId,
@@ -145,7 +160,7 @@ export function transformDataToGraph(data: FiliereMetier): { nodes: GraphNode[],
         group: 'experimental',
         title: `${experimental.nom}: ${experimental.description}`,
         color: nodeColors.experimental,
-        data: { type: 'experimental', ...experimental }
+        data: { ...experimental, type: 'experimental' }
       });
 
       edges.push({

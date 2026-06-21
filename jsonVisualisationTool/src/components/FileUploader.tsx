@@ -46,28 +46,28 @@ export const FileUploader: React.FC<FileUploaderProps> = ({ onFileLoad }) => {
   };
 
   return (
-    <div className="w-full max-w-md mx-auto">
+    <div className="mx-auto w-full max-w-md">
       <div
-        className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-400 transition-colors cursor-pointer bg-white/50 backdrop-blur-sm"
+        className="group cursor-pointer rounded-2xl border-2 border-dashed border-slate-300 bg-white/60 p-8 text-center shadow-soft backdrop-blur-sm transition-colors hover:border-brand-400 hover:bg-brand-50/40"
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onClick={() => fileInputRef.current?.click()}
       >
         <div className="flex flex-col items-center gap-4">
-          <div className="p-4 bg-blue-100 rounded-full">
-            <Upload className="w-8 h-8 text-blue-600" />
+          <div className="rounded-full bg-brand-100 p-4 transition-transform group-hover:scale-105">
+            <Upload className="h-8 w-8 text-brand-600" />
           </div>
           <div>
-            <p className="text-lg font-semibold text-gray-700">
+            <p className="text-lg font-semibold text-slate-700">
               Glissez votre fichier JSON ici
             </p>
-            <p className="text-sm text-gray-500 mt-1">
+            <p className="mt-1 text-sm text-slate-500">
               ou cliquez pour sélectionner un fichier
             </p>
           </div>
-          <div className="flex items-center gap-2 text-sm text-gray-400">
-            <FileText className="w-4 h-4" />
-            <span>Formats supportés: .json</span>
+          <div className="flex items-center gap-2 text-sm text-slate-400">
+            <FileText className="h-4 w-4" />
+            <span>Formats supportés : .json</span>
           </div>
         </div>
       </div>

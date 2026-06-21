@@ -19,7 +19,7 @@ const LABEL_TO_GROUP: Record<string, GroupKey> = {
   Etape: 'procedural',
   Expertise: 'expertise',
   Regle: 'expertise',
-  Competence: 'expertise',
+  Competence: 'competence',
   Experience: 'experimental',
   Organisation: 'domain',
   Filiere: 'domain',

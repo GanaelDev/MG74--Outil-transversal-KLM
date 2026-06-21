@@ -1,126 +1,366 @@
-// Constraints (Neo4j 5+ syntax)
-CREATE CONSTRAINT organisation_nom_unique IF NOT EXISTS FOR (o:Organisation) REQUIRE o.nom IS UNIQUE;
-CREATE CONSTRAINT filiere_nom_unique IF NOT EXISTS FOR (f:Filiere) REQUIRE f.nom IS UNIQUE;
-CREATE CONSTRAINT domaine_nom_unique IF NOT EXISTS FOR (d:Domaine) REQUIRE d.nom IS UNIQUE;
-CREATE CONSTRAINT competence_nom_unique IF NOT EXISTS FOR (c:Competence) REQUIRE c.nom IS UNIQUE;
-CREATE CONSTRAINT regle_name_unique IF NOT EXISTS FOR (r:Regle) REQUIRE r.Name IS UNIQUE;
-CREATE CONSTRAINT terme_id_unique IF NOT EXISTS FOR (t:Terme) REQUIRE t.id IS UNIQUE;
-CREATE CONSTRAINT lien_idTermeEnfant_unique IF NOT EXISTS FOR (l:Lien) REQUIRE l.idTermeEnfant IS UNIQUE;
-
-// === Organisation CACIB ===
-CREATE (o:Organisation {nom: "CACIB"});
-CREATE (f:Filiere {nom: "Finance"});
-MATCH (o:Organisation {nom: "CACIB"}), (f:Filiere {nom: "Finance"})
-CREATE (o)-[:HAS_FILIERE]->(f);
-CREATE (d:Domaine {nom: "Gestion"});
-MATCH (f:Filiere {nom: "Finance"}), (d:Domaine {nom: "Gestion"})
-CREATE (f)-[:HAS_DOMAINE]->(d);
-CREATE (c:Competence {nom: "finance", description: "desc", parametres: "params"});
-MATCH (d:Domaine {nom: "Gestion"}), (c:Competence {nom: "finance"})
-CREATE (d)-[:HAS_COMPETENCE]->(c);
-CREATE (e:Expertise {}), (ex:Experience {type: "type1"}), (p:Procedure {}), (v:Vocabulaire {});
-CREATE (r:Regle {Name: "Rule1", Expression: "expr", Type: "type"});
-CREATE (et:Etape {numero: 1, description: "desc"});
-CREATE (t:Terme {id: 1, nom: "Terme1", description: "desc"});
-CREATE (l:Lien {idTermeEnfant: 1, nom: "Lien1", description: "desc"});
-MATCH (c:Competence {nom: "finance"}), (e:Expertise {})
-CREATE (e)-[:IS_A]->(c);
-MATCH (c:Competence {nom: "finance"}), (ex:Experience {type: "type1"})
-CREATE (ex)-[:IS_A]->(c);
-MATCH (c:Competence {nom: "finance"}), (p:Procedure {})
-CREATE (p)-[:IS_A]->(c);
-MATCH (c:Competence {nom: "finance"}), (v:Vocabulaire {})
-CREATE (v)-[:IS_A]->(c);
-MATCH (e:Expertise {}), (r:Regle {Name: "Rule1"})
-CREATE (e)-[:HAS_REGLE]->(r);
-MATCH (p:Procedure {}), (et:Etape {numero: 1})
-CREATE (p)-[:HAS_ETAPE]->(et);
-MATCH (v:Vocabulaire {}), (t:Terme {id: 1})
-CREATE (v)-[:HAS_TERME]->(t);
-MATCH (t:Terme {id: 1}), (l:Lien {idTermeEnfant: 1})
-CREATE (t)-[:HAS_LIEN]->(l);
-
-// Filière Informatique - Orchestrade
-CREATE (f:Filiere {nom: "Informatique"});
-MATCH (o:Organisation {nom: "CACIB"}), (f:Filiere {nom: "Informatique"})
-CREATE (o)-[:HAS_FILIERE]->(f);
-CREATE (d:Domaine {nom: "Orchestrade"});
-MATCH (f:Filiere {nom: "Informatique"}), (d:Domaine {nom: "Orchestrade"})
-CREATE (f)-[:HAS_DOMAINE]->(d);
-CREATE (c:Competence {nom: ".NET", description: "plateforme de développement...", parametres: "params"});
-MATCH (d:Domaine {nom: "Orchestrade"}), (c:Competence {nom: ".NET"})
-CREATE (d)-[:HAS_COMPETENCE]->(c);
-CREATE (e:Expertise {}), (ex:Experience {type: "type1"}), (p:Procedure {nom: "installer .NET"}), (v:Vocabulaire {});
-CREATE (r:Regle {Name: "Respect du typage fort", Expression: "Toutes les variables doivent être déclarées avec un type explicite.", Type: "Bonne pratique"});
-CREATE (et1:Etape {numero: 1, description: "Télécharger l’installateur .NET depuis le site officiel de Microsoft."});
-CREATE (et2:Etape {numero: 2, description: "Lancer l’installateur et suivre les instructions à l’écran."});
-CREATE (et3:Etape {numero: 3, description: "Vérifier l’installation en exécutant la commande dotnet --version dans le terminal."});
-CREATE (t1:Terme {id: 2, nom: "Entity Framework", description: "l’ORM (Object-Relational Mapper) officiel de .NET"});
-CREATE (t2:Terme {id: 3, nom: "LINQ", description: "Un langage de requêtes intégré directement au C#"});
-CREATE (t3:Terme {id: 4, nom: "Async / Await", description: "exécuter des opérations longues sans bloquer l’application."});
-CREATE (l:Lien {idTermeEnfant: 2, nom: "Lien2", description: "Lien sur EF"});
-MATCH (c:Competence {nom: ".NET"}), (e:Expertise {})
-CREATE (e)-[:IS_A]->(c);
-MATCH (c:Competence {nom: ".NET"}), (ex:Experience {type: "type1"})
-CREATE (ex)-[:IS_A]->(c);
-MATCH (c:Competence {nom: ".NET"}), (p:Procedure {nom: "installer .NET"})
-CREATE (p)-[:IS_A]->(c);
-MATCH (c:Competence {nom: ".NET"}), (v:Vocabulaire {})
-CREATE (v)-[:IS_A]->(c);
-MATCH (e:Expertise {}), (r:Regle {Name: "Respect du typage fort"})
-CREATE (e)-[:HAS_REGLE]->(r);
-MATCH (p:Procedure {nom: "installer .NET"}), (et1:Etape {numero: 1}), (et2:Etape {numero: 2}), (et3:Etape {numero: 3})
-CREATE (p)-[:HAS_ETAPE]->(et1), (p)-[:HAS_ETAPE]->(et2), (p)-[:HAS_ETAPE]->(et3);
-MATCH (v:Vocabulaire {}), (t1:Terme {id: 2}), (t2:Terme {id: 3}), (t3:Terme {id: 4})
-CREATE (v)-[:HAS_TERME]->(t1), (v)-[:HAS_TERME]->(t2), (v)-[:HAS_TERME]->(t3);
-MATCH (t1:Terme {id: 2}), (l:Lien {idTermeEnfant: 2})
-CREATE (t1)-[:HAS_LIEN]->(l);
-
-// Compétences supplémentaires
-CREATE (c:Competence {nom: "SQL", description: "base de données", parametres: "params"});
-CREATE (c:Competence {nom: "IBM MQ", description: "Messagerie", parametres: "params"});
-CREATE (c:Competence {nom: "Octopus", description: "Déploiement", parametres: "params"});
-
-// === Organisation Vetoquinol ===
-CREATE (o:Organisation {nom: "Vetoquinol"});
-CREATE (f:Filiere {nom: "Production"});
-MATCH (o:Organisation {nom: "Vetoquinol"}), (f:Filiere {nom: "Production"})
-CREATE (o)-[:HAS_FILIERE]->(f);
-CREATE (d:Domaine {nom: "Chimie"});
-MATCH (f:Filiere {nom: "Production"}), (d:Domaine {nom: "Chimie"})
-CREATE (f)-[:HAS_DOMAINE]->(d);
-CREATE (c:Competence {nom: "Formulation", description: "Mélange de composants", parametres: "standard"});
-MATCH (d:Domaine {nom: "Chimie"}), (c:Competence {nom: "Formulation"})
-CREATE (d)-[:HAS_COMPETENCE]->(c);
-
-CREATE (f:Filiere {nom: "Qualité"});
-MATCH (o:Organisation {nom: "Vetoquinol"}), (f:Filiere {nom: "Qualité"})
-CREATE (o)-[:HAS_FILIERE]->(f);
-CREATE (d:Domaine {nom: "Contrôle"});
-MATCH (f:Filiere {nom: "Qualité"}), (d:Domaine {nom: "Contrôle"})
-CREATE (f)-[:HAS_DOMAINE]->(d);
-CREATE (c:Competence {nom: "Audit", description: "Vérification des normes", parametres: "ISO"});
-MATCH (d:Domaine {nom: "Contrôle"}), (c:Competence {nom: "Audit"})
-CREATE (d)-[:HAS_COMPETENCE]->(c);
-
-// === Organisation GE Vernova ===
-CREATE (o:Organisation {nom: "GE Vernova"});
-CREATE (f:Filiere {nom: "Énergie"});
-MATCH (o:Organisation {nom: "GE Vernova"}), (f:Filiere {nom: "Énergie"})
-CREATE (o)-[:HAS_FILIERE]->(f);
-CREATE (d:Domaine {nom: "Hydraulique"});
-MATCH (f:Filiere {nom: "Énergie"}), (d:Domaine {nom: "Hydraulique"})
-CREATE (f)-[:HAS_DOMAINE]->(d);
-CREATE (c:Competence {nom: "Turbines", description: "Machines tournantes", parametres: "mécaniques"});
-MATCH (d:Domaine {nom: "Hydraulique"}), (c:Competence {nom: "Turbines"})
-CREATE (d)-[:HAS_COMPETENCE]->(c);
-
-// La filière "Informatique" existe déjà (créée plus haut) : on la réutilise au lieu de la recréer
-MATCH (o:Organisation {nom: "GE Vernova"}), (f:Filiere {nom: "Informatique"})
-CREATE (o)-[:HAS_FILIERE]->(f);
-CREATE (d:Domaine {nom: "Supervision"});
-MATCH (f:Filiere {nom: "Informatique"}), (d:Domaine {nom: "Supervision"})
-CREATE (f)-[:HAS_DOMAINE]->(d);
-CREATE (c:Competence {nom: "SCADA", description: "Système de contrôle", parametres: "temps réel"});
-MATCH (d:Domaine {nom: "Supervision"}), (c:Competence {nom: "SCADA"})
-CREATE (d)-[:HAS_COMPETENCE]->(c);
+// === Filière : Cuisine (Cuisine.json) ===
+CREATE (:Filiere {uid: 1, nom: "Cuisine"});
+CREATE (:Domaine {uid: 2, nom: "Cuisiner en sécurité"});
+MATCH (a:Filiere {uid: 1}), (b:Domaine {uid: 2}) CREATE (a)-[:HAS_DOMAINE]->(b);
+CREATE (:Vocabulaire {uid: 3, nom: "Couteau", description: "Instrument tranchant servant à couper, composé d'une lame et d'un manche.", ref: "0"});
+MATCH (a:Domaine {uid: 2}), (b:Vocabulaire {uid: 3}) CREATE (a)-[:HAS_VOCABULAIRE]->(b);
+CREATE (:Vocabulaire {uid: 4, nom: "Lame", description: "Fer (d'un instrument, d'un outil tranchant).", ref: "1"});
+MATCH (a:Domaine {uid: 2}), (b:Vocabulaire {uid: 4}) CREATE (a)-[:HAS_VOCABULAIRE]->(b);
+CREATE (:Vocabulaire {uid: 5, nom: "Manche", description: "Partie allongée (d'un outil, d'un instrument) par laquelle on le tient.", ref: "2"});
+MATCH (a:Domaine {uid: 2}), (b:Vocabulaire {uid: 5}) CREATE (a)-[:HAS_VOCABULAIRE]->(b);
+MATCH (a:Vocabulaire {uid: 3}), (b:Vocabulaire {uid: 4}) CREATE (a)-[:ASA]->(b);
+MATCH (a:Vocabulaire {uid: 3}), (b:Vocabulaire {uid: 5}) CREATE (a)-[:ASA]->(b);
+CREATE (:Procedure {uid: 6, nom: "Découpe en bâtonnets", description: "Comment réaliser une découpe en bâtonnets ?"});
+MATCH (a:Domaine {uid: 2}), (b:Procedure {uid: 6}) CREATE (a)-[:HAS_PROCEDURE]->(b);
+CREATE (:Etape {uid: 7, nom: "Étape A1", numero: "A1", description: "Coupez vos légumes en tronçons de 5 cm."});
+MATCH (a:Procedure {uid: 6}), (b:Etape {uid: 7}) CREATE (a)-[:HAS_ETAPE]->(b);
+CREATE (:Etape {uid: 8, nom: "Étape A2", numero: "A2", description: "Coupez vos tronçons en tranche de 0.5 cm."});
+MATCH (a:Procedure {uid: 6}), (b:Etape {uid: 8}) CREATE (a)-[:HAS_ETAPE]->(b);
+CREATE (:Etape {uid: 9, nom: "Étape A3", numero: "A3", description: "Taillez chaque tranche en bâtonnets."});
+MATCH (a:Procedure {uid: 6}), (b:Etape {uid: 9}) CREATE (a)-[:HAS_ETAPE]->(b);
+CREATE (:Expertise {uid: 10, nom: "Combien de carotte par personne", description: ""});
+MATCH (a:Domaine {uid: 2}), (b:Expertise {uid: 10}) CREATE (a)-[:HAS_EXPERTISE]->(b);
+CREATE (:Regle {uid: 11, nom: "Pour combien de personne ai-je assez de carotte ?", type: "MATH", expression: "poidDisponible / poidParPersonne"});
+MATCH (a:Expertise {uid: 10}), (b:Regle {uid: 11}) CREATE (a)-[:HAS_REGLE]->(b);
+CREATE (:Regle {uid: 12, nom: "ai-je assez de carotte ?", type: "LOGIQUE", expression: "poidDisponible >= poidParPersonne * nbPersonne"});
+MATCH (a:Expertise {uid: 10}), (b:Regle {uid: 12}) CREATE (a)-[:HAS_REGLE]->(b);
+CREATE (:Regle {uid: 13, nom: "ai-je assez de carotte ?", type: "NUAGE", expression: "poidDisponible >= poidParPersonne * nbPersonne"});
+MATCH (a:Expertise {uid: 10}), (b:Regle {uid: 13}) CREATE (a)-[:HAS_REGLE]->(b);
+CREATE (:Experience {uid: 14, nom: "Coupure au couteau durant la découpe de légume", description: "Pour éviter de vous couper durant la découpe de légume. Avec votre main \"libre\", vous guidez la main avec laquelle vous tenez votre couteau. Pour ce faire, placez vos trois doigts du milieu directement sur votre aliment. Gardez le bout de vos doigts repliés de sorte à ce que ce soit vos articulations qui entrent en contact avec la lame du couteau. Vous réglez ainsi le tempo et vous ne pouvez pas vous couper les doigts (tant que votre lame reste droite).", type: "BM"});
+MATCH (a:Domaine {uid: 2}), (b:Experience {uid: 14}) CREATE (a)-[:HAS_EXPERIMENTAL]->(b);
+CREATE (:Experience {uid: 15, nom: "Avoir un couteau éfficace", description: "Bien aiguiser son couteau avant chaque utilisation pour avoir un couteau bien tranchant.", type: "CE"});
+MATCH (a:Domaine {uid: 2}), (b:Experience {uid: 15}) CREATE (a)-[:HAS_EXPERIMENTAL]->(b);
+// === Filière : Maison Inclusive (maison_inclusive.json) ===
+CREATE (:Filiere {uid: 16, nom: "Maison Inclusive"});
+CREATE (:Domaine {uid: 17, nom: "Gestion de l'énergie"});
+MATCH (a:Filiere {uid: 16}), (b:Domaine {uid: 17}) CREATE (a)-[:HAS_DOMAINE]->(b);
+CREATE (:Vocabulaire {uid: 18, nom: "PanneauxPhotovoltaiques", description: "Dispositif convertissant la lumière solaire en énergie électrique.", ref: "0"});
+MATCH (a:Domaine {uid: 17}), (b:Vocabulaire {uid: 18}) CREATE (a)-[:HAS_VOCABULAIRE]->(b);
+CREATE (:Vocabulaire {uid: 19, nom: "Batterie", description: "Dispositif de stockage de l'énergie électrique.", ref: "1"});
+MATCH (a:Domaine {uid: 17}), (b:Vocabulaire {uid: 19}) CREATE (a)-[:HAS_VOCABULAIRE]->(b);
+CREATE (:Vocabulaire {uid: 20, nom: "PompeChaleur", description: "Dispositif permettant de produire de la chaleur à partir de l'air extérieur.", ref: "2"});
+MATCH (a:Domaine {uid: 17}), (b:Vocabulaire {uid: 20}) CREATE (a)-[:HAS_VOCABULAIRE]->(b);
+CREATE (:Vocabulaire {uid: 21, nom: "ChaudiereGranule", description: "Chaudière utilisant des granulés de bois pour produire de la chaleur.", ref: "3"});
+MATCH (a:Domaine {uid: 17}), (b:Vocabulaire {uid: 21}) CREATE (a)-[:HAS_VOCABULAIRE]->(b);
+MATCH (a:Vocabulaire {uid: 18}), (b:Vocabulaire {uid: 20}) CREATE (a)-[:STOCKE_L_ENERGIE]->(b);
+MATCH (a:Vocabulaire {uid: 19}), (b:Vocabulaire {uid: 18}) CREATE (a)-[:STOCKE_L_ENERGIE]->(b);
+CREATE (:Procedure {uid: 22, nom: "Installation d'un Panneau Photovoltaïque", description: "Comment installer un panneau photovoltaïque pour optimiser l'efficacité énergétique ?"});
+MATCH (a:Domaine {uid: 17}), (b:Procedure {uid: 22}) CREATE (a)-[:HAS_PROCEDURE]->(b);
+CREATE (:Etape {uid: 23, nom: "Étape A1", numero: "A1", description: "Choisir un emplacement ensoleillé sur le toit."});
+MATCH (a:Procedure {uid: 22}), (b:Etape {uid: 23}) CREATE (a)-[:HAS_ETAPE]->(b);
+CREATE (:Etape {uid: 24, nom: "Étape A2", numero: "A2", description: "Fixer les supports de montage."});
+MATCH (a:Procedure {uid: 22}), (b:Etape {uid: 24}) CREATE (a)-[:HAS_ETAPE]->(b);
+CREATE (:Etape {uid: 25, nom: "Étape A3", numero: "A3", description: "Installer les panneaux et connecter au système électrique."});
+MATCH (a:Procedure {uid: 22}), (b:Etape {uid: 25}) CREATE (a)-[:HAS_ETAPE]->(b);
+CREATE (:Expertise {uid: 26, nom: "Calcul de la capacité de stockage de la Batterie", description: ""});
+MATCH (a:Domaine {uid: 17}), (b:Expertise {uid: 26}) CREATE (a)-[:HAS_EXPERTISE]->(b);
+CREATE (:Regle {uid: 27, nom: "Capacité totale disponible", type: "MATH", expression: "capacite * etatCharge"});
+MATCH (a:Expertise {uid: 26}), (b:Regle {uid: 27}) CREATE (a)-[:HAS_REGLE]->(b);
+CREATE (:Experience {uid: 28, nom: "Optimisation de la production d'énergie", description: "Ajustement des angles des panneaux photovoltaïques pour une meilleure performance.", type: "BM"});
+MATCH (a:Domaine {uid: 17}), (b:Experience {uid: 28}) CREATE (a)-[:HAS_EXPERIMENTAL]->(b);
+CREATE (:Domaine {uid: 29, nom: "Gestion de l'eau"});
+MATCH (a:Filiere {uid: 16}), (b:Domaine {uid: 29}) CREATE (a)-[:HAS_DOMAINE]->(b);
+CREATE (:Vocabulaire {uid: 30, nom: "BacRecuperationEauPluie", description: "Dispositif collectant l'eau de pluie pour divers usages.", ref: "4"});
+MATCH (a:Domaine {uid: 29}), (b:Vocabulaire {uid: 30}) CREATE (a)-[:HAS_VOCABULAIRE]->(b);
+CREATE (:Vocabulaire {uid: 31, nom: "BallonEauChaudeThermodynamique", description: "Dispositif de chauffage de l'eau utilisant une pompe à chaleur intégrée.", ref: "5"});
+MATCH (a:Domaine {uid: 29}), (b:Vocabulaire {uid: 31}) CREATE (a)-[:HAS_VOCABULAIRE]->(b);
+CREATE (:Procedure {uid: 32, nom: "Installation d'un Bac de Récupération d'Eau de Pluie", description: "Comment installer un bac de récupération d'eau de pluie ?"});
+MATCH (a:Domaine {uid: 29}), (b:Procedure {uid: 32}) CREATE (a)-[:HAS_PROCEDURE]->(b);
+CREATE (:Etape {uid: 33, nom: "Étape B1", numero: "B1", description: "Choisir un emplacement pour le bac."});
+MATCH (a:Procedure {uid: 32}), (b:Etape {uid: 33}) CREATE (a)-[:HAS_ETAPE]->(b);
+CREATE (:Etape {uid: 34, nom: "Étape B2", numero: "B2", description: "Connecter le bac au système de gouttière."});
+MATCH (a:Procedure {uid: 32}), (b:Etape {uid: 34}) CREATE (a)-[:HAS_ETAPE]->(b);
+CREATE (:Etape {uid: 35, nom: "Étape B3", numero: "B3", description: "Installer un filtre pour les débris."});
+MATCH (a:Procedure {uid: 32}), (b:Etape {uid: 35}) CREATE (a)-[:HAS_ETAPE]->(b);
+CREATE (:Expertise {uid: 36, nom: "Calcul de la capacité de récupération d'eau", description: ""});
+MATCH (a:Domaine {uid: 29}), (b:Expertise {uid: 36}) CREATE (a)-[:HAS_EXPERTISE]->(b);
+CREATE (:Regle {uid: 37, nom: "Capacité totale récupérable", type: "MATH", expression: "surfaceToit * coefficientPluie"});
+MATCH (a:Expertise {uid: 36}), (b:Regle {uid: 37}) CREATE (a)-[:HAS_REGLE]->(b);
+CREATE (:Experience {uid: 38, nom: "Optimisation de la collecte d'eau de pluie", description: "Ajustement de l'inclinaison des gouttières pour une meilleure collecte.", type: "BM"});
+MATCH (a:Domaine {uid: 29}), (b:Experience {uid: 38}) CREATE (a)-[:HAS_EXPERIMENTAL]->(b);
+CREATE (:Domaine {uid: 39, nom: "Gestion de la ventilation"});
+MATCH (a:Filiere {uid: 16}), (b:Domaine {uid: 39}) CREATE (a)-[:HAS_DOMAINE]->(b);
+CREATE (:Vocabulaire {uid: 40, nom: "VMC", description: "Ventilation mécanique contrôlée assurant le renouvellement de l'air dans la maison.", ref: "6"});
+MATCH (a:Domaine {uid: 39}), (b:Vocabulaire {uid: 40}) CREATE (a)-[:HAS_VOCABULAIRE]->(b);
+CREATE (:Vocabulaire {uid: 41, nom: "PuitCanadien", description: "Système de ventilation utilisant la géothermie pour réchauffer ou refroidir l'air.", ref: "7"});
+MATCH (a:Domaine {uid: 39}), (b:Vocabulaire {uid: 41}) CREATE (a)-[:HAS_VOCABULAIRE]->(b);
+MATCH (a:Vocabulaire {uid: 40}), (b:Vocabulaire {uid: 40}) CREATE (a)-[:CONTIENT]->(b);
+MATCH (a:Vocabulaire {uid: 40}), (b:Vocabulaire {uid: 41}) CREATE (a)-[:RECHAUFFE_L_AIR]->(b);
+MATCH (a:Vocabulaire {uid: 41}), (b:Vocabulaire {uid: 40}) CREATE (a)-[:CONTIENT]->(b);
+MATCH (a:Vocabulaire {uid: 41}), (b:Vocabulaire {uid: 40}) CREATE (a)-[:RECHAUFFE_L_AIR]->(b);
+CREATE (:Procedure {uid: 42, nom: "Installation d'un Système de VMC", description: "Comment installer un système de VMC pour une ventilation efficace ?"});
+MATCH (a:Domaine {uid: 39}), (b:Procedure {uid: 42}) CREATE (a)-[:HAS_PROCEDURE]->(b);
+CREATE (:Etape {uid: 43, nom: "Étape C1", numero: "C1", description: "Choisir les emplacements des bouches d'aération."});
+MATCH (a:Procedure {uid: 42}), (b:Etape {uid: 43}) CREATE (a)-[:HAS_ETAPE]->(b);
+CREATE (:Etape {uid: 44, nom: "Étape C2", numero: "C2", description: "Installer les conduits de ventilation."});
+MATCH (a:Procedure {uid: 42}), (b:Etape {uid: 44}) CREATE (a)-[:HAS_ETAPE]->(b);
+CREATE (:Etape {uid: 45, nom: "Étape C3", numero: "C3", description: "Connecter le système à une source d'énergie."});
+MATCH (a:Procedure {uid: 42}), (b:Etape {uid: 45}) CREATE (a)-[:HAS_ETAPE]->(b);
+CREATE (:Expertise {uid: 46, nom: "Calcul de la capacité de ventilation", description: ""});
+MATCH (a:Domaine {uid: 39}), (b:Expertise {uid: 46}) CREATE (a)-[:HAS_EXPERTISE]->(b);
+CREATE (:Regle {uid: 47, nom: "Capacité totale de ventilation", type: "MATH", expression: "volumeAir * coefficientRenouvellement"});
+MATCH (a:Expertise {uid: 46}), (b:Regle {uid: 47}) CREATE (a)-[:HAS_REGLE]->(b);
+CREATE (:Experience {uid: 48, nom: "Optimisation du système de ventilation", description: "Ajustement des conduits pour une meilleure circulation de l'air.", type: "BM"});
+MATCH (a:Domaine {uid: 39}), (b:Experience {uid: 48}) CREATE (a)-[:HAS_EXPERIMENTAL]->(b);
+// === Filière : Maladies des plantes (maladies_plantes.json) ===
+CREATE (:Filiere {uid: 49, nom: "Maladies des plantes"});
+CREATE (:Domaine {uid: 50, nom: "Reconnaissance et traitement des carences nutritionnelles"});
+MATCH (a:Filiere {uid: 49}), (b:Domaine {uid: 50}) CREATE (a)-[:HAS_DOMAINE]->(b);
+CREATE (:Vocabulaire {uid: 51, nom: "Carence en calcium", description: "Symptômes incluent noircissement et pourriture des fruits à partir de la base, déformation des feuilles avec des marques de brûlure sur les bords.", ref: "0"});
+MATCH (a:Domaine {uid: 50}), (b:Vocabulaire {uid: 51}) CREATE (a)-[:HAS_VOCABULAIRE]->(b);
+CREATE (:Vocabulaire {uid: 52, nom: "Carence en fer", description: "Feuilles jaunes avec des nervures vertes visibles.", ref: "1"});
+MATCH (a:Domaine {uid: 50}), (b:Vocabulaire {uid: 52}) CREATE (a)-[:HAS_VOCABULAIRE]->(b);
+CREATE (:Vocabulaire {uid: 53, nom: "Carence en potassium et magnésium", description: "Bords des feuilles jaunissent ou brunissent, apparition de taches.", ref: "2"});
+MATCH (a:Domaine {uid: 50}), (b:Vocabulaire {uid: 53}) CREATE (a)-[:HAS_VOCABULAIRE]->(b);
+CREATE (:Vocabulaire {uid: 54, nom: "Carence en nitrate", description: "Feuilles d'un vert pâle, surtout les feuilles de taille moyenne, fleurs plus petites et moins colorées.", ref: "3"});
+MATCH (a:Domaine {uid: 50}), (b:Vocabulaire {uid: 54}) CREATE (a)-[:HAS_VOCABULAIRE]->(b);
+MATCH (a:Vocabulaire {uid: 51}), (b:Vocabulaire {uid: 52}) CREATE (a)-[:IKO]->(b);
+MATCH (a:Vocabulaire {uid: 51}), (b:Vocabulaire {uid: 53}) CREATE (a)-[:ASA]->(b);
+MATCH (a:Vocabulaire {uid: 52}), (b:Vocabulaire {uid: 51}) CREATE (a)-[:IKO]->(b);
+MATCH (a:Vocabulaire {uid: 53}), (b:Vocabulaire {uid: 52}) CREATE (a)-[:IKO]->(b);
+MATCH (a:Vocabulaire {uid: 54}), (b:Vocabulaire {uid: 53}) CREATE (a)-[:ISA]->(b);
+CREATE (:Procedure {uid: 55, nom: "Traitement des carences en calcium", description: "Comment traiter les carences en calcium ?"});
+MATCH (a:Domaine {uid: 50}), (b:Procedure {uid: 55}) CREATE (a)-[:HAS_PROCEDURE]->(b);
+CREATE (:Etape {uid: 56, nom: "Étape C1", numero: "C1", description: "En aquaponie/bioponie, ajouter régulièrement du calcium et du magnésium."});
+MATCH (a:Procedure {uid: 55}), (b:Etape {uid: 56}) CREATE (a)-[:HAS_ETAPE]->(b);
+CREATE (:Etape {uid: 57, nom: "Étape C2", numero: "C2", description: "En permaculture, maintenir une humidité constante et utiliser des sprays de calcium."});
+MATCH (a:Procedure {uid: 55}), (b:Etape {uid: 57}) CREATE (a)-[:HAS_ETAPE]->(b);
+CREATE (:Procedure {uid: 58, nom: "Traitement des carences en fer", description: "Comment traiter les carences en fer ?"});
+MATCH (a:Domaine {uid: 50}), (b:Procedure {uid: 58}) CREATE (a)-[:HAS_PROCEDURE]->(b);
+CREATE (:Etape {uid: 59, nom: "Étape F1", numero: "F1", description: "Ajouter régulièrement du fer en aquaponie/bioponie."});
+MATCH (a:Procedure {uid: 58}), (b:Etape {uid: 59}) CREATE (a)-[:HAS_ETAPE]->(b);
+CREATE (:Etape {uid: 60, nom: "Étape F2", numero: "F2", description: "Dans les bacs, ajouter du compost ou du fumier et maintenir le pH en dessous de 7."});
+MATCH (a:Procedure {uid: 58}), (b:Etape {uid: 60}) CREATE (a)-[:HAS_ETAPE]->(b);
+CREATE (:Expertise {uid: 61, nom: "Identification des carences", description: "Comment identifier les carences nutritionnelles des plantes ?"});
+MATCH (a:Domaine {uid: 50}), (b:Expertise {uid: 61}) CREATE (a)-[:HAS_EXPERTISE]->(b);
+CREATE (:Regle {uid: 62, nom: "Identifier carence en calcium", type: "SYMPTOME", expression: "fruits.noircissement && feuilles.deformation && feuilles.burnMarks"});
+MATCH (a:Expertise {uid: 61}), (b:Regle {uid: 62}) CREATE (a)-[:HAS_REGLE]->(b);
+CREATE (:Regle {uid: 63, nom: "Identifier carence en fer", type: "SYMPTOME", expression: "feuilles.jaunissement && nervures.vertes"});
+MATCH (a:Expertise {uid: 61}), (b:Regle {uid: 63}) CREATE (a)-[:HAS_REGLE]->(b);
+CREATE (:Experience {uid: 64, nom: "Correction de carence en calcium en aquaponie", description: "Ajouter du calcium et du magnésium régulièrement.", type: "BM"});
+MATCH (a:Domaine {uid: 50}), (b:Experience {uid: 64}) CREATE (a)-[:HAS_EXPERIMENTAL]->(b);
+CREATE (:Domaine {uid: 65, nom: "Détection et traitement des maladies des plantes"});
+MATCH (a:Filiere {uid: 49}), (b:Domaine {uid: 65}) CREATE (a)-[:HAS_DOMAINE]->(b);
+CREATE (:Vocabulaire {uid: 66, nom: "Oïdium (Powdery Mildew)", description: "Taches blanches poudreuses sur les feuilles et les fruits.", ref: "4"});
+MATCH (a:Domaine {uid: 65}), (b:Vocabulaire {uid: 66}) CREATE (a)-[:HAS_VOCABULAIRE]->(b);
+CREATE (:Vocabulaire {uid: 67, nom: "Mildiou (Downy Mildew)", description: "Taches angulaires jaunes devenant brunes sur les feuilles.", ref: "5"});
+MATCH (a:Domaine {uid: 65}), (b:Vocabulaire {uid: 67}) CREATE (a)-[:HAS_VOCABULAIRE]->(b);
+MATCH (a:Vocabulaire {uid: 66}), (b:Vocabulaire {uid: 67}) CREATE (a)-[:IKO]->(b);
+MATCH (a:Vocabulaire {uid: 67}), (b:Vocabulaire {uid: 66}) CREATE (a)-[:IKO]->(b);
+CREATE (:Procedure {uid: 68, nom: "Traitement de l'oïdium", description: "Comment traiter l'oïdium ?"});
+MATCH (a:Domaine {uid: 65}), (b:Procedure {uid: 68}) CREATE (a)-[:HAS_PROCEDURE]->(b);
+CREATE (:Etape {uid: 69, nom: "Étape O1", numero: "O1", description: "Pulvériser du bicarbonate de potassium ou du soufre micronisé."});
+MATCH (a:Procedure {uid: 68}), (b:Etape {uid: 69}) CREATE (a)-[:HAS_ETAPE]->(b);
+CREATE (:Etape {uid: 70, nom: "Étape O2", numero: "O2", description: "Utiliser des huiles essentielles appropriées."});
+MATCH (a:Procedure {uid: 68}), (b:Etape {uid: 70}) CREATE (a)-[:HAS_ETAPE]->(b);
+CREATE (:Procedure {uid: 71, nom: "Prévention du mildiou", description: "Comment prévenir le mildiou ?"});
+MATCH (a:Domaine {uid: 65}), (b:Procedure {uid: 71}) CREATE (a)-[:HAS_PROCEDURE]->(b);
+CREATE (:Etape {uid: 72, nom: "Étape M1", numero: "M1", description: "Éviter l'excès d'humidité et assurer une bonne ventilation."});
+MATCH (a:Procedure {uid: 71}), (b:Etape {uid: 72}) CREATE (a)-[:HAS_ETAPE]->(b);
+CREATE (:Etape {uid: 73, nom: "Étape M2", numero: "M2", description: "Arroser le matin pour éviter l'humidité nocturne."});
+MATCH (a:Procedure {uid: 71}), (b:Etape {uid: 73}) CREATE (a)-[:HAS_ETAPE]->(b);
+CREATE (:Expertise {uid: 74, nom: "Identification de l'oïdium", description: ""});
+MATCH (a:Domaine {uid: 65}), (b:Expertise {uid: 74}) CREATE (a)-[:HAS_EXPERTISE]->(b);
+CREATE (:Regle {uid: 75, nom: "Identifier l'oïdium", type: "SYMPTOME", expression: "feuilles.tachesBlanchesPoudreuses || fruits.tachesBlanchesPoudreuses"});
+MATCH (a:Expertise {uid: 74}), (b:Regle {uid: 75}) CREATE (a)-[:HAS_REGLE]->(b);
+CREATE (:Experience {uid: 76, nom: "Utilisation du bicarbonate de potassium pour l'oïdium", description: "Pulvériser du bicarbonate de potassium pour traiter l'oïdium.", type: "BM"});
+MATCH (a:Domaine {uid: 65}), (b:Experience {uid: 76}) CREATE (a)-[:HAS_EXPERIMENTAL]->(b);
+CREATE (:Domaine {uid: 77, nom: "Gestion des ravageurs"});
+MATCH (a:Filiere {uid: 49}), (b:Domaine {uid: 77}) CREATE (a)-[:HAS_DOMAINE]->(b);
+CREATE (:Vocabulaire {uid: 78, nom: "Acariens (Spider Mites)", description: "Petites taches jaunes sur les feuilles, possible présence de toiles.", ref: "6"});
+MATCH (a:Domaine {uid: 77}), (b:Vocabulaire {uid: 78}) CREATE (a)-[:HAS_VOCABULAIRE]->(b);
+CREATE (:Vocabulaire {uid: 79, nom: "Aleurodes (Whiteflies)", description: "Petites mouches blanches sous les feuilles, jaunissement des feuilles.", ref: "7"});
+MATCH (a:Domaine {uid: 77}), (b:Vocabulaire {uid: 79}) CREATE (a)-[:HAS_VOCABULAIRE]->(b);
+CREATE (:Vocabulaire {uid: 80, nom: "Chenilles (Caterpillars)", description: "Trous dans les feuilles, présence de déjections noires.", ref: "8"});
+MATCH (a:Domaine {uid: 77}), (b:Vocabulaire {uid: 80}) CREATE (a)-[:HAS_VOCABULAIRE]->(b);
+CREATE (:Vocabulaire {uid: 81, nom: "Mouches mineuses (Leaf Miners)", description: "Traces de minage visibles sur les feuilles.", ref: "9"});
+MATCH (a:Domaine {uid: 77}), (b:Vocabulaire {uid: 81}) CREATE (a)-[:HAS_VOCABULAIRE]->(b);
+MATCH (a:Vocabulaire {uid: 78}), (b:Vocabulaire {uid: 79}) CREATE (a)-[:IKO]->(b);
+MATCH (a:Vocabulaire {uid: 79}), (b:Vocabulaire {uid: 78}) CREATE (a)-[:IKO]->(b);
+MATCH (a:Vocabulaire {uid: 80}), (b:Vocabulaire {uid: 81}) CREATE (a)-[:IKO]->(b);
+MATCH (a:Vocabulaire {uid: 81}), (b:Vocabulaire {uid: 80}) CREATE (a)-[:IKO]->(b);
+CREATE (:Procedure {uid: 82, nom: "Traitement des acariens", description: "Comment traiter les acariens ?"});
+MATCH (a:Domaine {uid: 77}), (b:Procedure {uid: 82}) CREATE (a)-[:HAS_PROCEDURE]->(b);
+CREATE (:Etape {uid: 83, nom: "Étape A1", numero: "A1", description: "Pulvériser de l'eau froide, retirer les parties infectées."});
+MATCH (a:Procedure {uid: 82}), (b:Etape {uid: 83}) CREATE (a)-[:HAS_ETAPE]->(b);
+CREATE (:Etape {uid: 84, nom: "Étape A2", numero: "A2", description: "Utiliser une solution d'huile de colza."});
+MATCH (a:Procedure {uid: 82}), (b:Etape {uid: 84}) CREATE (a)-[:HAS_ETAPE]->(b);
+CREATE (:Procedure {uid: 85, nom: "Traitement des aleurodes", description: "Comment traiter les aleurodes ?"});
+MATCH (a:Domaine {uid: 77}), (b:Procedure {uid: 85}) CREATE (a)-[:HAS_PROCEDURE]->(b);
+CREATE (:Etape {uid: 86, nom: "Étape AL1", numero: "AL1", description: "Utiliser des pièges collants."});
+MATCH (a:Procedure {uid: 85}), (b:Etape {uid: 86}) CREATE (a)-[:HAS_ETAPE]->(b);
+CREATE (:Etape {uid: 87, nom: "Étape AL2", numero: "AL2", description: "Pulvériser une solution de savon noir."});
+MATCH (a:Procedure {uid: 85}), (b:Etape {uid: 87}) CREATE (a)-[:HAS_ETAPE]->(b);
+CREATE (:Expertise {uid: 88, nom: "Identification des acariens", description: ""});
+MATCH (a:Domaine {uid: 77}), (b:Expertise {uid: 88}) CREATE (a)-[:HAS_EXPERTISE]->(b);
+CREATE (:Regle {uid: 89, nom: "Identifier les acariens", type: "SYMPTOME", expression: "feuilles.tachesJaunes && presenceToiles"});
+MATCH (a:Expertise {uid: 88}), (b:Regle {uid: 89}) CREATE (a)-[:HAS_REGLE]->(b);
+CREATE (:Experience {uid: 90, nom: "Utilisation de l'huile de colza contre les acariens", description: "Tester l'efficacité de l'huile de colza contre les acariens.", type: "BM"});
+MATCH (a:Domaine {uid: 77}), (b:Experience {uid: 90}) CREATE (a)-[:HAS_EXPERIMENTAL]->(b);
+// === Filière : Patients âgés (patient_age.json) ===
+CREATE (:Filiere {uid: 91, nom: "Patients âgés"});
+CREATE (:Domaine {uid: 92, nom: "Identification des symptômes"});
+MATCH (a:Filiere {uid: 91}), (b:Domaine {uid: 92}) CREATE (a)-[:HAS_DOMAINE]->(b);
+CREATE (:Vocabulaire {uid: 93, nom: "Douleur thoracique", description: "Sensation de douleur ou de pression dans la région de la poitrine.", ref: "0"});
+MATCH (a:Domaine {uid: 92}), (b:Vocabulaire {uid: 93}) CREATE (a)-[:HAS_VOCABULAIRE]->(b);
+CREATE (:Vocabulaire {uid: 94, nom: "Essoufflement", description: "Difficulté à respirer ou sensation de manque d'air.", ref: "1"});
+MATCH (a:Domaine {uid: 92}), (b:Vocabulaire {uid: 94}) CREATE (a)-[:HAS_VOCABULAIRE]->(b);
+CREATE (:Vocabulaire {uid: 95, nom: "Fatigue", description: "Sensation de fatigue ou d'épuisement extrême.", ref: "2"});
+MATCH (a:Domaine {uid: 92}), (b:Vocabulaire {uid: 95}) CREATE (a)-[:HAS_VOCABULAIRE]->(b);
+CREATE (:Vocabulaire {uid: 96, nom: "Confusion", description: "Troubles de la mémoire, difficulté à se concentrer ou à comprendre.", ref: "3"});
+MATCH (a:Domaine {uid: 92}), (b:Vocabulaire {uid: 96}) CREATE (a)-[:HAS_VOCABULAIRE]->(b);
+CREATE (:Procedure {uid: 97, nom: "Évaluation de la douleur thoracique", description: "Comment évaluer la douleur thoracique ?"});
+MATCH (a:Domaine {uid: 92}), (b:Procedure {uid: 97}) CREATE (a)-[:HAS_PROCEDURE]->(b);
+CREATE (:Etape {uid: 98, nom: "Étape D1", numero: "D1", description: "Interroger le patient sur l'emplacement, l'intensité et la durée de la douleur."});
+MATCH (a:Procedure {uid: 97}), (b:Etape {uid: 98}) CREATE (a)-[:HAS_ETAPE]->(b);
+CREATE (:Etape {uid: 99, nom: "Étape D2", numero: "D2", description: "Observer les signes vitaux et effectuer un électrocardiogramme (ECG)."});
+MATCH (a:Procedure {uid: 97}), (b:Etape {uid: 99}) CREATE (a)-[:HAS_ETAPE]->(b);
+CREATE (:Procedure {uid: 100, nom: "Évaluation de l'essoufflement", description: "Comment évaluer l'essoufflement ?"});
+MATCH (a:Domaine {uid: 92}), (b:Procedure {uid: 100}) CREATE (a)-[:HAS_PROCEDURE]->(b);
+CREATE (:Etape {uid: 101, nom: "Étape E1", numero: "E1", description: "Mesurer la fréquence respiratoire et la saturation en oxygène."});
+MATCH (a:Procedure {uid: 100}), (b:Etape {uid: 101}) CREATE (a)-[:HAS_ETAPE]->(b);
+CREATE (:Etape {uid: 102, nom: "Étape E2", numero: "E2", description: "Effectuer une auscultation pulmonaire."});
+MATCH (a:Procedure {uid: 100}), (b:Etape {uid: 102}) CREATE (a)-[:HAS_ETAPE]->(b);
+CREATE (:Expertise {uid: 103, nom: "Interprétation des symptômes", description: "Comment interpréter les symptômes pour diagnostiquer les maladies ?"});
+MATCH (a:Domaine {uid: 92}), (b:Expertise {uid: 103}) CREATE (a)-[:HAS_EXPERTISE]->(b);
+CREATE (:Regle {uid: 104, nom: "Douleur thoracique suspecte d'angine", type: "SYMPTOME", expression: "douleurThoracique && essoufflement && fatigue"});
+MATCH (a:Expertise {uid: 103}), (b:Regle {uid: 104}) CREATE (a)-[:HAS_REGLE]->(b);
+CREATE (:Regle {uid: 105, nom: "Confusion suspecte de démence", type: "SYMPTOME", expression: "confusion && troublesMemoire"});
+MATCH (a:Expertise {uid: 103}), (b:Regle {uid: 105}) CREATE (a)-[:HAS_REGLE]->(b);
+CREATE (:Experience {uid: 106, nom: "Suivi de la douleur thoracique", description: "Enregistrer les épisodes de douleur thoracique et leurs déclencheurs potentiels.", type: "BM"});
+MATCH (a:Domaine {uid: 92}), (b:Experience {uid: 106}) CREATE (a)-[:HAS_EXPERIMENTAL]->(b);
+CREATE (:Domaine {uid: 107, nom: "Traitement des maladies"});
+MATCH (a:Filiere {uid: 91}), (b:Domaine {uid: 107}) CREATE (a)-[:HAS_DOMAINE]->(b);
+CREATE (:Vocabulaire {uid: 108, nom: "Angine de poitrine", description: "Douleur thoracique due à une réduction du flux sanguin vers le cœur.", ref: "4"});
+MATCH (a:Domaine {uid: 107}), (b:Vocabulaire {uid: 108}) CREATE (a)-[:HAS_VOCABULAIRE]->(b);
+CREATE (:Vocabulaire {uid: 109, nom: "Insuffisance cardiaque", description: "Condition où le cœur ne pompe pas le sang aussi efficacement qu'il le devrait.", ref: "5"});
+MATCH (a:Domaine {uid: 107}), (b:Vocabulaire {uid: 109}) CREATE (a)-[:HAS_VOCABULAIRE]->(b);
+CREATE (:Vocabulaire {uid: 110, nom: "Pneumonie", description: "Infection qui enflamme les sacs aériens dans un ou les deux poumons.", ref: "6"});
+MATCH (a:Domaine {uid: 107}), (b:Vocabulaire {uid: 110}) CREATE (a)-[:HAS_VOCABULAIRE]->(b);
+CREATE (:Vocabulaire {uid: 111, nom: "Démence", description: "Déclin de la fonction cognitive suffisamment sévère pour interférer avec la vie quotidienne.", ref: "7"});
+MATCH (a:Domaine {uid: 107}), (b:Vocabulaire {uid: 111}) CREATE (a)-[:HAS_VOCABULAIRE]->(b);
+CREATE (:Procedure {uid: 112, nom: "Traitement de l'angine de poitrine", description: "Comment traiter l'angine de poitrine ?"});
+MATCH (a:Domaine {uid: 107}), (b:Procedure {uid: 112}) CREATE (a)-[:HAS_PROCEDURE]->(b);
+CREATE (:Etape {uid: 113, nom: "Étape A1", numero: "A1", description: "Administrer des nitrates pour soulager la douleur."});
+MATCH (a:Procedure {uid: 112}), (b:Etape {uid: 113}) CREATE (a)-[:HAS_ETAPE]->(b);
+CREATE (:Etape {uid: 114, nom: "Étape A2", numero: "A2", description: "Recommander des changements de mode de vie, y compris un régime alimentaire sain et l'exercice."});
+MATCH (a:Procedure {uid: 112}), (b:Etape {uid: 114}) CREATE (a)-[:HAS_ETAPE]->(b);
+CREATE (:Procedure {uid: 115, nom: "Traitement de l'insuffisance cardiaque", description: "Comment traiter l'insuffisance cardiaque ?"});
+MATCH (a:Domaine {uid: 107}), (b:Procedure {uid: 115}) CREATE (a)-[:HAS_PROCEDURE]->(b);
+CREATE (:Etape {uid: 116, nom: "Étape IC1", numero: "IC1", description: "Administrer des diurétiques pour réduire la rétention de liquide."});
+MATCH (a:Procedure {uid: 115}), (b:Etape {uid: 116}) CREATE (a)-[:HAS_ETAPE]->(b);
+CREATE (:Etape {uid: 117, nom: "Étape IC2", numero: "IC2", description: "Surveiller régulièrement la fonction cardiaque et ajuster les médicaments selon les besoins."});
+MATCH (a:Procedure {uid: 115}), (b:Etape {uid: 117}) CREATE (a)-[:HAS_ETAPE]->(b);
+CREATE (:Expertise {uid: 118, nom: "Gestion des maladies chroniques", description: "Comment gérer les maladies chroniques chez les patients âgés ?"});
+MATCH (a:Domaine {uid: 107}), (b:Expertise {uid: 118}) CREATE (a)-[:HAS_EXPERTISE]->(b);
+CREATE (:Regle {uid: 119, nom: "Gestion de l'angine de poitrine", type: "TRAITEMENT", expression: "suiviDouleurThoracique && administrationNitrates"});
+MATCH (a:Expertise {uid: 118}), (b:Regle {uid: 119}) CREATE (a)-[:HAS_REGLE]->(b);
+CREATE (:Regle {uid: 120, nom: "Gestion de l'insuffisance cardiaque", type: "TRAITEMENT", expression: "administrationDiuretiques && suiviFonctionCardiaque"});
+MATCH (a:Expertise {uid: 118}), (b:Regle {uid: 120}) CREATE (a)-[:HAS_REGLE]->(b);
+CREATE (:Experience {uid: 121, nom: "Essai d'un nouveau régime pour l'angine", description: "Tester l'impact d'un régime pauvre en graisses saturées sur les symptômes de l'angine.", type: "CE"});
+MATCH (a:Domaine {uid: 107}), (b:Experience {uid: 121}) CREATE (a)-[:HAS_EXPERIMENTAL]->(b);
+// === Filière : Serre Connectée (serre.json) ===
+CREATE (:Filiere {uid: 122, nom: "Serre Connectée"});
+CREATE (:Domaine {uid: 123, nom: "Gestion de la Serre"});
+MATCH (a:Filiere {uid: 122}), (b:Domaine {uid: 123}) CREATE (a)-[:HAS_DOMAINE]->(b);
+CREATE (:Vocabulaire {uid: 124, nom: "Localisation", description: "Emplacement géographique de la serre.", ref: "0"});
+MATCH (a:Domaine {uid: 123}), (b:Vocabulaire {uid: 124}) CREATE (a)-[:HAS_VOCABULAIRE]->(b);
+CREATE (:Vocabulaire {uid: 125, nom: "Dimensions", description: "Dimensions de la serre.", ref: "1"});
+MATCH (a:Domaine {uid: 123}), (b:Vocabulaire {uid: 125}) CREATE (a)-[:HAS_VOCABULAIRE]->(b);
+CREATE (:Vocabulaire {uid: 126, nom: "Surface", description: "Surface de la serre.", ref: "2"});
+MATCH (a:Domaine {uid: 123}), (b:Vocabulaire {uid: 126}) CREATE (a)-[:HAS_VOCABULAIRE]->(b);
+CREATE (:Vocabulaire {uid: 127, nom: "Hauteur sous faîtière", description: "Hauteur sous faîtière de la serre.", ref: "3"});
+MATCH (a:Domaine {uid: 123}), (b:Vocabulaire {uid: 127}) CREATE (a)-[:HAS_VOCABULAIRE]->(b);
+CREATE (:Vocabulaire {uid: 128, nom: "Alimentation", description: "Source d'alimentation de la serre.", ref: "4"});
+MATCH (a:Domaine {uid: 123}), (b:Vocabulaire {uid: 128}) CREATE (a)-[:HAS_VOCABULAIRE]->(b);
+CREATE (:Vocabulaire {uid: 129, nom: "Connectivité", description: "Types de connectivité disponibles pour la serre.", ref: "5"});
+MATCH (a:Domaine {uid: 123}), (b:Vocabulaire {uid: 129}) CREATE (a)-[:HAS_VOCABULAIRE]->(b);
+CREATE (:Vocabulaire {uid: 130, nom: "Sigfox", description: "Type de connectivité.", ref: "6"});
+MATCH (a:Domaine {uid: 123}), (b:Vocabulaire {uid: 130}) CREATE (a)-[:HAS_VOCABULAIRE]->(b);
+CREATE (:Vocabulaire {uid: 131, nom: "Wifi", description: "Type de connectivité.", ref: "7"});
+MATCH (a:Domaine {uid: 123}), (b:Vocabulaire {uid: 131}) CREATE (a)-[:HAS_VOCABULAIRE]->(b);
+CREATE (:Vocabulaire {uid: 132, nom: "Ethernet", description: "Type de connectivité.", ref: "8"});
+MATCH (a:Domaine {uid: 123}), (b:Vocabulaire {uid: 132}) CREATE (a)-[:HAS_VOCABULAIRE]->(b);
+CREATE (:Vocabulaire {uid: 133, nom: "Zigbee", description: "Type de connectivité.", ref: "9"});
+MATCH (a:Domaine {uid: 123}), (b:Vocabulaire {uid: 133}) CREATE (a)-[:HAS_VOCABULAIRE]->(b);
+CREATE (:Vocabulaire {uid: 134, nom: "5G", description: "Type de connectivité.", ref: "10"});
+MATCH (a:Domaine {uid: 123}), (b:Vocabulaire {uid: 134}) CREATE (a)-[:HAS_VOCABULAIRE]->(b);
+CREATE (:Vocabulaire {uid: 135, nom: "Résistance", description: "Capacités de résistance de la serre.", ref: "11"});
+MATCH (a:Domaine {uid: 123}), (b:Vocabulaire {uid: 135}) CREATE (a)-[:HAS_VOCABULAIRE]->(b);
+CREATE (:Vocabulaire {uid: 136, nom: "Vent", description: "Résistance au vent.", ref: "12"});
+MATCH (a:Domaine {uid: 123}), (b:Vocabulaire {uid: 136}) CREATE (a)-[:HAS_VOCABULAIRE]->(b);
+CREATE (:Vocabulaire {uid: 137, nom: "Neige et Grêle", description: "Résistance à la neige et à la grêle.", ref: "13"});
+MATCH (a:Domaine {uid: 123}), (b:Vocabulaire {uid: 137}) CREATE (a)-[:HAS_VOCABULAIRE]->(b);
+MATCH (a:Vocabulaire {uid: 125}), (b:Vocabulaire {uid: 126}) CREATE (a)-[:ASA]->(b);
+MATCH (a:Vocabulaire {uid: 125}), (b:Vocabulaire {uid: 127}) CREATE (a)-[:ASA]->(b);
+MATCH (a:Vocabulaire {uid: 129}), (b:Vocabulaire {uid: 130}) CREATE (a)-[:IKO]->(b);
+MATCH (a:Vocabulaire {uid: 129}), (b:Vocabulaire {uid: 131}) CREATE (a)-[:IKO]->(b);
+MATCH (a:Vocabulaire {uid: 129}), (b:Vocabulaire {uid: 132}) CREATE (a)-[:IKO]->(b);
+MATCH (a:Vocabulaire {uid: 129}), (b:Vocabulaire {uid: 133}) CREATE (a)-[:IKO]->(b);
+MATCH (a:Vocabulaire {uid: 129}), (b:Vocabulaire {uid: 134}) CREATE (a)-[:IKO]->(b);
+MATCH (a:Vocabulaire {uid: 135}), (b:Vocabulaire {uid: 136}) CREATE (a)-[:ASA]->(b);
+MATCH (a:Vocabulaire {uid: 135}), (b:Vocabulaire {uid: 137}) CREATE (a)-[:ASA]->(b);
+CREATE (:Procedure {uid: 138, nom: "Pilotage de la Serre", description: "Procédures de pilotage de la serre."});
+MATCH (a:Domaine {uid: 123}), (b:Procedure {uid: 138}) CREATE (a)-[:HAS_PROCEDURE]->(b);
+CREATE (:Etape {uid: 139, nom: "Étape P1", numero: "P1", description: "Piloter l'ambiance."});
+MATCH (a:Procedure {uid: 138}), (b:Etape {uid: 139}) CREATE (a)-[:HAS_ETAPE]->(b);
+CREATE (:Etape {uid: 140, nom: "Étape P2", numero: "P2", description: "Piloter l'eau."});
+MATCH (a:Procedure {uid: 138}), (b:Etape {uid: 140}) CREATE (a)-[:HAS_ETAPE]->(b);
+CREATE (:Etape {uid: 141, nom: "Étape P3", numero: "P3", description: "Piloter l'énergie."});
+MATCH (a:Procedure {uid: 138}), (b:Etape {uid: 141}) CREATE (a)-[:HAS_ETAPE]->(b);
+CREATE (:Etape {uid: 142, nom: "Étape P4", numero: "P4", description: "Gérer les robots (farmbot)."});
+MATCH (a:Procedure {uid: 138}), (b:Etape {uid: 142}) CREATE (a)-[:HAS_ETAPE]->(b);
+CREATE (:Expertise {uid: 143, nom: "Système de Culture", description: "Composants et capacités des systèmes de culture."});
+MATCH (a:Domaine {uid: 123}), (b:Expertise {uid: 143}) CREATE (a)-[:HAS_EXPERTISE]->(b);
+CREATE (:Regle {uid: 144, nom: "Bassin à Poissons", type: "ASA", expression: "Capacité : 1200l, Bulleur intégré : true"});
+MATCH (a:Expertise {uid: 143}), (b:Regle {uid: 144}) CREATE (a)-[:HAS_REGLE]->(b);
+CREATE (:Regle {uid: 145, nom: "Tours de Culture ZipGrow", type: "ASA", expression: "Capacité : 24 tours"});
+MATCH (a:Expertise {uid: 143}), (b:Regle {uid: 145}) CREATE (a)-[:HAS_REGLE]->(b);
+CREATE (:Regle {uid: 146, nom: "Table de Travail", type: "ASA", expression: ""});
+MATCH (a:Expertise {uid: 143}), (b:Regle {uid: 146}) CREATE (a)-[:HAS_REGLE]->(b);
+CREATE (:Experience {uid: 147, nom: "Gestion des Végétaux et des Poissons", description: "Actions et soins pour les végétaux et les poissons.", type: "BM"});
+MATCH (a:Domaine {uid: 123}), (b:Experience {uid: 147}) CREATE (a)-[:HAS_EXPERIMENTAL]->(b);
+CREATE (:Experience {uid: 148, nom: "Actions contre les Ravageurs", description: "Méthodes pour combattre les ravageurs.", type: "CE"});
+MATCH (a:Domaine {uid: 123}), (b:Experience {uid: 148}) CREATE (a)-[:HAS_EXPERIMENTAL]->(b);
+CREATE (:Experience {uid: 149, nom: "Maladies des Végétaux", description: "", type: "BM"});
+MATCH (a:Domaine {uid: 123}), (b:Experience {uid: 149}) CREATE (a)-[:HAS_EXPERIMENTAL]->(b);
+CREATE (:Experience {uid: 150, nom: "Nutrition et Soins des Poissons", description: "Soins spécifiques pour les poissons.", type: "CE"});
+MATCH (a:Domaine {uid: 123}), (b:Experience {uid: 150}) CREATE (a)-[:HAS_EXPERIMENTAL]->(b);
+// === Filière : Smart City (smart_city.json) ===
+CREATE (:Filiere {uid: 151, nom: "Smart City"});
+CREATE (:Domaine {uid: 152, nom: "Gestion de l'Énergie Solaire et du Stockage"});
+MATCH (a:Filiere {uid: 151}), (b:Domaine {uid: 152}) CREATE (a)-[:HAS_DOMAINE]->(b);
+CREATE (:Vocabulaire {uid: 153, nom: "Panneaux Solaires", description: "Dispositifs qui convertissent l'énergie solaire en énergie électrique.", ref: "0"});
+MATCH (a:Domaine {uid: 152}), (b:Vocabulaire {uid: 153}) CREATE (a)-[:HAS_VOCABULAIRE]->(b);
+CREATE (:Vocabulaire {uid: 154, nom: "Ombrière Solaire", description: "Structure de protection équipée de panneaux solaires, souvent utilisée dans les parkings.", ref: "1"});
+MATCH (a:Domaine {uid: 152}), (b:Vocabulaire {uid: 154}) CREATE (a)-[:HAS_VOCABULAIRE]->(b);
+CREATE (:Vocabulaire {uid: 155, nom: "Borne de Recharge", description: "Station permettant la recharge des véhicules électriques.", ref: "2"});
+MATCH (a:Domaine {uid: 152}), (b:Vocabulaire {uid: 155}) CREATE (a)-[:HAS_VOCABULAIRE]->(b);
+CREATE (:Vocabulaire {uid: 156, nom: "Candélabres", description: "Lampadaires équipés de capteurs pour une gestion intelligente de l'éclairage public.", ref: "3"});
+MATCH (a:Domaine {uid: 152}), (b:Vocabulaire {uid: 156}) CREATE (a)-[:HAS_VOCABULAIRE]->(b);
+CREATE (:Vocabulaire {uid: 157, nom: "Poubelles connectées", description: "Poubelles équipées de capteurs pour une gestion efficace des déchets.", ref: "4"});
+MATCH (a:Domaine {uid: 152}), (b:Vocabulaire {uid: 157}) CREATE (a)-[:HAS_VOCABULAIRE]->(b);
+MATCH (a:Vocabulaire {uid: 153}), (b:Vocabulaire {uid: 154}) CREATE (a)-[:ASA]->(b);
+MATCH (a:Vocabulaire {uid: 153}), (b:Vocabulaire {uid: 155}) CREATE (a)-[:ASA]->(b);
+CREATE (:Procedure {uid: 158, nom: "Gestion des Panneaux Solaires", description: "Comment optimiser l'utilisation des panneaux solaires."});
+MATCH (a:Domaine {uid: 152}), (b:Procedure {uid: 158}) CREATE (a)-[:HAS_PROCEDURE]->(b);
+CREATE (:Etape {uid: 159, nom: "Étape A1", numero: "A1", description: "Surveiller la production photovoltaïque quotidiennement."});
+MATCH (a:Procedure {uid: 158}), (b:Etape {uid: 159}) CREATE (a)-[:HAS_ETAPE]->(b);
+CREATE (:Etape {uid: 160, nom: "Étape A2", numero: "A2", description: "Ajuster la répartition de l'énergie en fonction de la production."});
+MATCH (a:Procedure {uid: 158}), (b:Etape {uid: 160}) CREATE (a)-[:HAS_ETAPE]->(b);
+CREATE (:Etape {uid: 161, nom: "Étape A3", numero: "A3", description: "Prioriser la recharge des batteries et la production d'hydrogène lorsque la production est élevée."});
+MATCH (a:Procedure {uid: 158}), (b:Etape {uid: 161}) CREATE (a)-[:HAS_ETAPE]->(b);
+CREATE (:Etape {uid: 162, nom: "Étape A4", numero: "A4", description: "Limiter la décharge des batteries et optimiser l'utilisation d'hydrogène lorsque la production est faible."});
+MATCH (a:Procedure {uid: 158}), (b:Etape {uid: 162}) CREATE (a)-[:HAS_ETAPE]->(b);
+CREATE (:Expertise {uid: 163, nom: "Gestion de la Production Photovoltaïque", description: "Règles pour optimiser la production et l'utilisation de l'énergie solaire."});
+MATCH (a:Domaine {uid: 152}), (b:Expertise {uid: 163}) CREATE (a)-[:HAS_EXPERTISE]->(b);
+CREATE (:Regle {uid: 164, nom: "Prioriser l'utilisation de l'énergie solaire", type: "LOGIQUE", expression: "productionPhotovoltaïque > 700"});
+MATCH (a:Expertise {uid: 163}), (b:Regle {uid: 164}) CREATE (a)-[:HAS_REGLE]->(b);
+CREATE (:Regle {uid: 165, nom: "Limiter la décharge des batteries", type: "LOGIQUE", expression: "productionPhotovoltaïque < 400"});
+MATCH (a:Expertise {uid: 163}), (b:Regle {uid: 165}) CREATE (a)-[:HAS_REGLE]->(b);
+CREATE (:Regle {uid: 166, nom: "Limiter l'utilisation des équipements non essentiels", type: "LOGIQUE", expression: "niveauChargeBatteries < 60"});
+MATCH (a:Expertise {uid: 163}), (b:Regle {uid: 166}) CREATE (a)-[:HAS_REGLE]->(b);
+CREATE (:Experience {uid: 167, nom: "Optimisation de la Recharge Électrique", description: "Stratégies pour maximiser l'efficacité de la recharge des véhicules électriques.", type: "BM"});
+MATCH (a:Domaine {uid: 152}), (b:Experience {uid: 167}) CREATE (a)-[:HAS_EXPERIMENTAL]->(b);
+CREATE (:Experience {uid: 168, nom: "Maintenance des Panneaux Solaires", description: "Procédures pour assurer la performance optimale des panneaux solaires.", type: "CE"});
+MATCH (a:Domaine {uid: 152}), (b:Experience {uid: 168}) CREATE (a)-[:HAS_EXPERIMENTAL]->(b);
