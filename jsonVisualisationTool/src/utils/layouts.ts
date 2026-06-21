@@ -175,74 +175,129 @@ export function radialPositions(nodes: GraphNode[], edges: GraphEdge[]): Map<str
  * Disposition en GRAPPES (group-in-a-box, approche « compound »).
  *
  * On coupe les arêtes du backbone (entre deux nœuds « domaine ») : chaque domaine
- * devient la tête d'une composante regroupant ses compétences (et leurs sous-nœuds),
- * dessinée dans sa propre bulle. Tous les nœuds restés seuls (organisation, filière,
- * nœuds isolés) sont rassemblés dans un bloc compact. Bulles et bloc sont empaquetés
- * en format paysage. C'est l'équivalent manuel d'un layout compound type fCoSE.
+ * devient une bulle (le domaine au centre, ses compétences autour). Les bulles sont
+ * ensuite regroupées par **filière** : chaque filière est placée au centre de ses
+ * domaines (super-grappe), ce qui garde chaque filière près de son monde et raccourcit
+ * les arêtes. Les super-grappes sont empaquetées en format paysage. C'est l'équivalent
+ * manuel d'un layout compound (type fCoSE) à deux niveaux.
  */
+interface Bubble {
+  head: string;
+  members: string[];
+  innerR: number;
+  radius: number;
+}
+
+interface Blob {
+  radius: number;
+  render: (ox: number, oy: number) => void;
+}
+
 export function clusterPositions(nodes: GraphNode[], edges: GraphEdge[]): Map<string, Position> {
   const byId = new Map(nodes.map((n) => [n.id, n]));
+  const isDomain = (id: string) => byId.get(id)?.group === 'domain';
+  const pos = new Map<string, Position>();
 
-  // Arêtes « internes » : on retire le backbone (domaine ↔ domaine) pour isoler les grappes.
-  const innerEdges = edges.filter(
-    (e) => !(byId.get(e.from)?.group === 'domain' && byId.get(e.to)?.group === 'domain')
-  );
-  const adj = undirectedAdjacency(nodes, innerEdges);
-  const comps = connectedComponents(nodes, adj);
+  // 1) Bulles = composantes obtenues après coupe du backbone (domaine ↔ domaine).
+  //    Chaque domaine + ses compétences forme une bulle ; les nœuds restés seuls
+  //    (filières, organisations, isolés) atterrissent dans `looseSingles`.
+  const innerEdges = edges.filter((e) => !(isDomain(e.from) && isDomain(e.to)));
+  const adjInner = undirectedAdjacency(nodes, innerEdges);
+  const comps = connectedComponents(nodes, adjInner);
 
-  // Bulles = composantes à plusieurs nœuds ; le reste (domaines seuls, nœuds isolés) → bloc « loose ».
-  const bubbles: { comp: string[]; head: string; innerR: number }[] = [];
-  const loose: string[] = [];
+  const bubbles: Bubble[] = [];
+  const looseSingles: string[] = [];
   for (const comp of comps) {
     if (comp.length <= 1) {
-      loose.push(comp[0]);
+      looseSingles.push(comp[0]);
       continue;
     }
     const set = new Set(comp);
-    const domainNode = comp.find((id) => byId.get(id)?.group === 'domain');
-    let head = domainNode || comp[0];
-    if (!domainNode) {
+    let head = comp.find(isDomain);
+    if (!head) {
       let best = -1;
+      head = comp[0];
       for (const id of comp) {
-        const d = (adj.get(id) || []).filter((v) => set.has(v)).length;
+        const d = (adjInner.get(id) || []).filter((v) => set.has(v)).length;
         if (d > best) {
           best = d;
           head = id;
         }
       }
     }
-    bubbles.push({ comp, head, innerR: Math.max(95, (comp.length - 1) * 20) });
+    const innerR = Math.max(95, (comp.length - 1) * 20);
+    bubbles.push({ head, members: comp, innerR, radius: innerR + 30 });
   }
 
-  // Un blob par bulle, plus un blob pour le bloc « loose ».
-  const radii = bubbles.map((b) => b.innerR + 30);
-  const looseCols = Math.max(1, Math.ceil(Math.sqrt(loose.length)));
-  const looseStep = 90;
-  const looseR = loose.length ? Math.max((looseCols * looseStep) / 2, 70) : 0;
-  if (loose.length) radii.push(looseR);
+  // 2) Rattacher chaque bulle à sa filière (le nœud domaine resté seul = backbone).
+  const adjFull = undirectedAdjacency(nodes, edges);
+  const backbone = new Set(looseSingles.filter(isDomain)); // filières / organisations
+  const superMap = new Map<string, Bubble[]>(); // filière -> ses bulles
+  const orphanBubbles: Bubble[] = [];
+  for (const b of bubbles) {
+    const parent = (adjFull.get(b.head) || []).find((v) => backbone.has(v));
+    if (parent) {
+      const arr = superMap.get(parent);
+      if (arr) arr.push(b);
+      else superMap.set(parent, [b]);
+    } else {
+      orphanBubbles.push(b);
+    }
+  }
 
-  const centers = packBlobs(radii);
-  const pos = new Map<string, Position>();
-
-  bubbles.forEach((b, i) => {
-    const c = centers[i];
-    pos.set(b.head, { x: c.x, y: c.y });
-    const inner = b.comp.filter((id) => id !== b.head);
+  // Place les membres d'une bulle autour de son centre.
+  const placeBubble = (b: Bubble, cx: number, cy: number) => {
+    pos.set(b.head, { x: cx, y: cy });
+    const inner = b.members.filter((id) => id !== b.head);
     inner.forEach((id, j) => {
       const a = (2 * Math.PI * j) / Math.max(1, inner.length);
-      pos.set(id, { x: c.x + b.innerR * Math.cos(a), y: c.y + b.innerR * Math.sin(a) });
+      pos.set(id, { x: cx + b.innerR * Math.cos(a), y: cy + b.innerR * Math.sin(a) });
     });
-  });
+  };
 
-  if (loose.length) {
-    const c = centers[bubbles.length];
-    loose.forEach((id, j) => {
-      pos.set(id, {
-        x: c.x - looseR + (j % looseCols) * looseStep,
-        y: c.y - looseR + Math.floor(j / looseCols) * looseStep,
-      });
+  // 3) Un blob par super-grappe : la filière au centre, ses bulles de domaines autour.
+  const blobs: Blob[] = [];
+  for (const [filiereId, bs] of superMap) {
+    const maxBR = Math.max(...bs.map((b) => b.radius));
+    const n = bs.length;
+    const ringR = n === 1
+      ? bs[0].radius + 70
+      : Math.max(maxBR + 60, (2 * maxBR + 60) / (2 * Math.sin(Math.PI / n)));
+    blobs.push({
+      radius: ringR + maxBR,
+      render: (ox, oy) => {
+        pos.set(filiereId, { x: ox, y: oy }); // filière au centre de sa super-grappe
+        bs.forEach((b, k) => {
+          const a = (2 * Math.PI * k) / n - Math.PI / 2; // démarre en haut
+          placeBubble(b, ox + ringR * Math.cos(a), oy + ringR * Math.sin(a));
+        });
+      },
     });
   }
+
+  // Bulles sans filière : chacune son propre blob.
+  for (const b of orphanBubbles) {
+    blobs.push({ radius: b.radius, render: (ox, oy) => placeBubble(b, ox, oy) });
+  }
+
+  // Nœuds vraiment isolés / backbone non rattaché : un bloc compact.
+  const leftover = looseSingles.filter((id) => !superMap.has(id));
+  if (leftover.length) {
+    const cols = Math.max(1, Math.ceil(Math.sqrt(leftover.length)));
+    const step = 110;
+    const r = Math.max((cols * step) / 2, 70);
+    blobs.push({
+      radius: r,
+      render: (ox, oy) =>
+        leftover.forEach((id, j) => {
+          pos.set(id, { x: ox - r + (j % cols) * step, y: oy - r + Math.floor(j / cols) * step });
+        }),
+    });
+  }
+
+  // 4) Empaquetage des blobs (super-grappes + bulles orphelines + bloc restant).
+  const centers = packBlobs(blobs.map((b) => b.radius));
+  blobs.forEach((b, i) => b.render(centers[i].x, centers[i].y));
 
   return pos;
 }
